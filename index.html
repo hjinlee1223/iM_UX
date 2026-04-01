@@ -561,19 +561,34 @@ const CASES = {
   ]
 };
 
+function extractProduct(text) {
+  const products = ['iM스마트통장','스마트통장','비상금전용통장','비상금통장','iM직장인대출','iM주택담보대출','iM전세대출','iM적금','iM예금','iM펀드','iM카드','iM뱅크'];
+  for (const p of products) { if (text.includes(p)) return p; }
+  return null;
+}
+
 function analyzeIntent(text) {
   const t = text.toLowerCase();
-  if (t.includes('피그마') || t.includes('figma') || t.includes('가이드 문서') || t.includes('링크')) return 'figma_link';
+  const orig = text;
+
+  if (t.includes('피그마') || t.includes('figma') || t.includes('가이드 문서') || (t.includes('링크') && t.includes('가이드'))) return 'figma_link';
   if (t.includes('에러') || t.includes('오류') || t.includes('실패') || t.includes('error')) return 'error_message';
-  if (t.includes('빈 화면') || t.includes('empty') || t.includes('결과 없') || t.includes('내역 없')) return 'empty_state';
-  if (t.includes('로딩') || t.includes('불러오') || t.includes('loading') || t.includes('기다')) return 'loading_state';
+  if (t.includes('빈 화면') || t.includes('empty') || t.includes('결과 없') || t.includes('내역 없') || t.includes('데이터 없')) return 'empty_state';
+  if (t.includes('로딩') || t.includes('불러오') || t.includes('loading') || t.includes('처리 중')) return 'loading_state';
   if (t.includes('바텀시트') && t.includes('모달')) return 'compare_bs_modal';
-  if (t.includes('바텀시트') || t.includes('bottom sheet') || t.includes('bottom_sheet')) return 'bottom_sheet';
-  if (t.includes('모달') || t.includes('팝업') || t.includes('modal')) return 'modal';
   if (t.includes('약관') || t.includes('동의') || t.includes('개인정보')) return 'terms_sheet';
-  if (t.includes('날짜') || t.includes('date') || t.includes('달력') || t.includes('캘린더')) return 'date_sheet';
-  if (t.includes('입력') || t.includes('otp') || t.includes('비밀번호')) return 'input_sheet';
-  if (t.includes('문구') || t.includes('카피') || t.includes('텍스트') || t.includes('써')) return 'writing_help';
+  if (t.includes('날짜') || t.includes('달력') || t.includes('캘린더') || t.includes('픽커')) return 'date_sheet';
+  if (t.includes('otp') || (t.includes('입력') && (t.includes('시트') || t.includes('바텀') || t.includes('필드')))) return 'input_sheet';
+  if (t.includes('바텀시트') || t.includes('bottom sheet')) return 'bottom_sheet';
+  if (t.includes('모달') || t.includes('팝업')) return 'modal';
+  if (t.includes('배너')) return 'banner_copy';
+  if (t.includes('타이틀') || t.includes('제목') || (t.includes('title') && !t.includes('서브타이틀'))) return 'title_copy';
+  if (t.includes('완료') || t.includes('성공') || (t.includes('처리') && t.includes('됐'))) return 'success_message';
+  if (t.includes('버튼') || t.includes('cta')) return 'button_copy';
+  if (t.includes('토스트') || t.includes('snackbar')) return 'toast_message';
+  if (t.includes('추천 문구') || t.includes('추천문구') || t.includes('가입 추천') || t.includes('가입추천') || t.includes('가입 문구') || t.includes('가입문구') || (t.includes('추천') && extractProduct(orig))) return 'product_recommend';
+  if (t.includes('상세') || t.includes('상품 정보') || t.includes('상품정보')) return 'product_detail';
+  if (t.includes('문구') || t.includes('카피') || t.includes('예시') || t.includes('알려줘') || t.includes('써줘') || t.includes('추천')) return 'writing_help_detail';
   return 'unknown';
 }
 
@@ -774,27 +789,197 @@ function generateResponse(intent, userText) {
 </ul>`;
   }
 
-  if (intent === 'writing_help') {
-    return `<span class="badge gray">문구 작성 도움</span>
-<p style="margin-bottom:12px;">어떤 상황의 문구인지 조금 더 알려주시면 정확하게 도와드릴 수 있어요 😊</p>
-<p style="font-size:14px;font-weight:500;margin-bottom:8px;">다음 중 어떤 상황인가요?</p>
+  // ── 타이틀 문구 ──
+  if (intent === 'title_copy') {
+    const product = extractProduct(userText) || '상품명';
+    return `<span class="badge blue">타이틀 문구 가이드</span>
+<p style="margin-bottom:10px;">iM뱅크 가이드 기준으로 타이틀은 <strong>최대 16자, 문장형</strong>으로 작성해요.</p>
+<h3>✅ 작성 원칙</h3>
 <ul>
-  <li>오류/실패 상황 안내 → <strong>에러 메시지</strong></li>
-  <li>조회 결과 없을 때 → <strong>Empty State</strong></li>
-  <li>처리 대기 중 → <strong>로딩 문구</strong></li>
-  <li>약관/동의 안내 → <strong>약관형 바텀시트</strong></li>
-  <li>기타 상황 → 상황을 자세히 설명해 주세요!</li>
+  <li>핵심 정보를 앞에 배치 (상품명 → 핵심 혜택)</li>
+  <li>명사형 종결보다 서술형·문장형 권장</li>
+  <li>16자 초과 시 서브타이틀로 분리</li>
+</ul>
+<div class="recommend-box">
+  <div class="recommend-label">추천 타이틀 예시 — ${product} 상세</div>
+  <div class="recommend-text">"${product} 상세 정보"</div>
+</div>
+<div class="alt-box">
+  <div class="alt-label">차선 (서술형)</div>
+  <div class="alt-text">"${product}의 혜택을 확인하세요"</div>
+</div>
+<div class="case-section">
+  <div class="case-section-title">🏦 타행 참고 사례</div>
+  <div class="case-item"><div class="case-bank">카카오뱅크</div><div class="case-content">상품명 + 한 줄 핵심 혜택 조합. 예: "모임통장 · 같이 모아봐요"</div></div>
+  <div class="case-item"><div class="case-bank">토스</div><div class="case-content">타이틀을 최소화하고 서브 텍스트에 혜택 강조. "토스 저금통" 단일 명사형 사용</div></div>
+  <div class="case-item"><div class="case-bank">신한SOL</div><div class="case-content">상품명 그대로 타이틀, 서브에 금리·혜택 수치 명시 방식</div></div>
+</div>`;
+  }
+
+  // ── 배너 문구 ──
+  if (intent === 'banner_copy') {
+    const product = extractProduct(userText) || '상품';
+    return `<span class="badge blue">배너 문구 가이드</span>
+<p style="margin-bottom:10px;">배너는 <strong>짧고 임팩트 있게</strong>, 혜택 중심으로 작성해요. 가이드상 타이틀 16자 원칙을 준용해요.</p>
+<h3>✅ 작성 원칙</h3>
+<ul>
+  <li>핵심 혜택·수치를 첫 줄에 배치</li>
+  <li>행동 유도(CTA) 문구와 짝을 이루도록 작성</li>
+  <li>부정 표현 지양, 긍정·이득 중심 어투 사용</li>
+</ul>
+<div class="recommend-box">
+  <div class="recommend-label">추천 배너 문구 — ${product}</div>
+  <div class="recommend-text">"지금 바로 ${product} 만나보세요"</div>
+</div>
+<div class="alt-box">
+  <div class="alt-label">차선 (혜택 강조형)</div>
+  <div class="alt-text">"${product}으로 더 스마트하게"</div>
+</div>
+<p style="font-size:13px;color:#666;margin-top:8px;">💡 상품의 핵심 혜택(금리, 한도, 특징)을 알려주시면 더 정확한 문구를 드릴 수 있어요!</p>
+<div class="case-section">
+  <div class="case-section-title">🏦 타행 참고 사례</div>
+  <div class="case-item"><div class="case-bank">카카오뱅크</div><div class="case-content">숫자+혜택 강조: "연 최대 OO% · 지금 개설하기" 형태로 수치 전면 배치</div></div>
+  <div class="case-item"><div class="case-bank">토스</div><div class="case-content">감성 카피 + CTA 분리: "돈 관리, 이제 쉽게" / 버튼에 "시작하기" 단독 배치</div></div>
+  <div class="case-item"><div class="case-bank">KB국민은행</div><div class="case-content">이벤트 기간·조건 명시형: "OO까지, KB스타적금 금리 우대"</div></div>
+</div>`;
+  }
+
+  // ── 상품 가입 추천 문구 ──
+  if (intent === 'product_recommend') {
+    const product = extractProduct(userText) || '상품';
+    return `<span class="badge blue">가입 추천 문구 가이드</span>
+<p style="margin-bottom:10px;">가입 추천 문구는 <strong>긍정·유도 어투</strong>로, 사용자가 혜택을 즉시 체감할 수 있게 작성해요.</p>
+<h3>✅ 작성 원칙</h3>
+<ul>
+  <li>혜택/특징을 구체적 수치나 상황으로 표현</li>
+  <li>"지금", "바로", "쉽게" 등 즉각성 표현 활용</li>
+  <li>명령형보다 제안·권유형 어투 권장</li>
+  <li>두 문장 이내로 간결하게</li>
+</ul>
+<div class="recommend-box">
+  <div class="recommend-label">추천 문구 — ${product}</div>
+  <div class="recommend-text">"언제든 자유롭게, ${product}으로 시작해보세요"</div>
+</div>
+<div class="alt-box">
+  <div class="alt-label">차선 문구</div>
+  <div class="alt-text">"${product}, 지금 바로 만들어보세요"</div>
+</div>
+<p style="font-size:13px;color:#666;margin-top:8px;">💡 상품의 주요 혜택(금리, 한도, 조건)을 알려주시면 맞춤 문구를 드릴게요!</p>
+<div class="case-section">
+  <div class="case-section-title">🏦 타행 참고 사례</div>
+  <div class="case-item"><div class="case-bank">카카오뱅크</div><div class="case-content">"비상금 대출, 필요할 때 바로" — 상황 공감 + 즉시성 강조</div></div>
+  <div class="case-item"><div class="case-bank">토스</div><div class="case-content">"내 돈을 더 잘 모을 수 있어요" — 1인칭 사용자 시점으로 혜택 서술</div></div>
+  <div class="case-item"><div class="case-bank">신한SOL</div><div class="case-content">"지금 가입하면 OO 혜택까지" — 즉시 행동 유도 + 조건부 혜택 명시</div></div>
+</div>`;
+  }
+
+  // ── 상품 상세 정보 ──
+  if (intent === 'product_detail') {
+    const product = extractProduct(userText) || '상품';
+    return `<span class="badge blue">상품 상세 정보 문구 가이드</span>
+<p style="margin-bottom:10px;">상품 상세 화면의 텍스트는 <strong>정보 전달 우선, 군더더기 없이</strong> 작성해요.</p>
+<h3>✅ 작성 원칙</h3>
+<ul>
+  <li>타이틀: 상품명 (16자 이내)</li>
+  <li>서브타이틀: 핵심 혜택 한 줄 요약 (2줄 이내)</li>
+  <li>본문: 수치·조건은 강조, 주의사항은 별도 섹션 분리</li>
+  <li>금융 용어는 풀어서 표현 (예: "연 이자율" → "1년 동안 받는 이자")</li>
+</ul>
+<div class="recommend-box">
+  <div class="recommend-label">타이틀 예시 — ${product}</div>
+  <div class="recommend-text">"${product}"</div>
+</div>
+<div class="alt-box">
+  <div class="alt-label">서브타이틀 예시</div>
+  <div class="alt-text">"필요할 때 언제든 자유롭게 입출금되는 통장"</div>
+</div>
+<div class="case-section">
+  <div class="case-section-title">🏦 타행 참고 사례</div>
+  <div class="case-item"><div class="case-bank">카카오뱅크</div><div class="case-content">타이틀 단순화 + 핵심 수치(금리, 한도)를 인포그래픽으로 시각화</div></div>
+  <div class="case-item"><div class="case-bank">토스</div><div class="case-content">혜택 → 조건 → 주의사항 순 레이아웃, 각 섹션 헤더 간결하게</div></div>
+  <div class="case-item"><div class="case-bank">신한SOL</div><div class="case-content">테이블형 정보 제공 + 핵심 혜택 배지(Badge) 강조 방식</div></div>
+</div>`;
+  }
+
+  // ── 완료 메시지 ──
+  if (intent === 'success_message') {
+    return `<span class="badge green">완료 메시지 가이드</span>
+<p style="margin-bottom:10px;">완료 화면은 <strong>안도감과 다음 행동</strong>을 함께 제공해요.</p>
+<h3>✅ 작성 원칙</h3>
+<ul>
+  <li>처리 결과를 명확히 전달 (무엇이 완료됐는지)</li>
+  <li>긍정적·따뜻한 어투 유지</li>
+  <li>다음 행동(CTA) 유도 문구 병행</li>
+</ul>
+<div class="recommend-box">
+  <div class="recommend-label">추천 문구</div>
+  <div class="recommend-text">"완료됐어요!"</div>
+</div>
+<div class="alt-box">
+  <div class="alt-label">차선 (구체형)</div>
+  <div class="alt-text">"이체가 완료됐어요"</div>
+</div>
+<p style="font-size:13px;color:#888;margin-top:8px;">❌ 지양: "처리 완료", "정상 처리되었습니다"</p>`;
+  }
+
+  // ── 버튼 문구 ──
+  if (intent === 'button_copy') {
+    return `<span class="badge blue">버튼(CTA) 문구 가이드</span>
+<p style="margin-bottom:10px;">버튼 문구는 <strong>동사형으로 짧게</strong>, 클릭 후 무슨 일이 일어나는지 명확히 표현해요.</p>
+<h3>✅ 작성 원칙</h3>
+<ul>
+  <li>동사형 종결: "확인하기", "신청하기", "시작하기"</li>
+  <li>6자 이내 권장</li>
+  <li>Primary/Secondary 버튼 역할 명확히 구분</li>
+</ul>
+<div class="recommend-box">
+  <div class="recommend-label">Primary 버튼 추천</div>
+  <div class="recommend-text">"확인하기" / "신청하기" / "시작하기"</div>
+</div>
+<div class="alt-box">
+  <div class="alt-label">Secondary 버튼 추천</div>
+  <div class="alt-text">"취소" / "나중에" / "돌아가기"</div>
+</div>
+<p style="font-size:13px;color:#888;margin-top:8px;">❌ 지양: "OK", "제출", "클릭"</p>`;
+  }
+
+  // ── 토스트 메시지 ──
+  if (intent === 'toast_message') {
+    return `<span class="badge blue">토스트 메시지 가이드</span>
+<p style="margin-bottom:10px;">토스트는 <strong>짧고 즉각적인 피드백</strong>. 최대 1문장, 행동 결과 중심으로 써요.</p>
+<div class="recommend-box">
+  <div class="recommend-label">추천 예시</div>
+  <div class="recommend-text">"복사됐어요" / "저장됐어요"</div>
+</div>
+<div class="alt-box">
+  <div class="alt-label">차선</div>
+  <div class="alt-text">"링크가 복사되었습니다"</div>
+</div>
+<p style="font-size:13px;color:#888;margin-top:8px;">❌ 지양: "작업이 완료되었습니다", "성공적으로 처리됨"</p>`;
+  }
+
+  // ── 문구 도움 (상세 유도) ──
+  if (intent === 'writing_help_detail') {
+    return `<span class="badge gray">문구 유형을 조금 더 알려주세요</span>
+<p style="margin-bottom:10px;">아래 중 어떤 문구가 필요하신가요? 상황을 알면 바로 예시를 드릴 수 있어요!</p>
+<ul>
+  <li>📌 <strong>타이틀/제목</strong> → "수신 상품 타이틀 예시 알려줘"</li>
+  <li>📌 <strong>배너 문구</strong> → "iM스마트통장 배너 문구 추천해줘"</li>
+  <li>📌 <strong>가입 추천 문구</strong> → "iM스마트통장 가입 추천 문구 알려줘"</li>
+  <li>📌 <strong>버튼(CTA)</strong> → "가입하기 버튼 문구 뭐가 좋아?"</li>
+  <li>📌 <strong>완료 메시지</strong> → "이체 완료 메시지 문구 추천해줘"</li>
+  <li>📌 <strong>에러 메시지</strong> → "이체 실패 에러 메시지 알려줘"</li>
 </ul>`;
   }
 
-  return `<span class="badge gray">추가 정보 필요</span>
-<p style="margin-bottom:10px;">질문 내용을 조금 더 구체적으로 알려주시면 가이드 기준에 맞게 정확히 도와드릴 수 있어요.</p>
-<p style="font-size:14px;font-weight:500;">예를 들어 이렇게 물어봐 주세요:</p>
+  return `<span class="badge gray">조금 더 구체적으로 알려주세요</span>
+<p style="margin-bottom:10px;">질문을 조금 더 구체적으로 입력해주시면 가이드 기준에 맞게 바로 도와드릴게요!</p>
 <ul>
-  <li>"이체 실패 시 에러 메시지 문구 알려줘"</li>
-  <li>"바텀시트와 모달 중 어떤 걸 써야 해?"</li>
-  <li>"날짜 선택 UI 가이드가 궁금해"</li>
-  <li>"Empty state 문구 예시 보여줘"</li>
+  <li>"iM스마트통장 가입 추천 문구 알려줘"</li>
+  <li>"비상금전용통장 배너 문구 추천해줘"</li>
+  <li>"수신 상품 상세 타이틀 예시 보여줘"</li>
+  <li>"이체 실패 에러 메시지 뭐가 좋아?"</li>
+  <li>"바텀시트랑 모달 중 어떤 걸 써야 해?"</li>
 </ul>`;
 }
 
@@ -819,7 +1004,10 @@ function addMessage(content, isUser) {
   row.appendChild(avatar);
   row.appendChild(bubble);
   area.appendChild(row);
-  area.scrollTop = area.scrollHeight;
+  setTimeout(() => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    area.scrollTop = area.scrollHeight;
+  }, 50);
   return row;
 }
 
@@ -841,6 +1029,7 @@ function addTyping() {
   row.appendChild(indicator);
   area.appendChild(row);
   area.scrollTop = area.scrollHeight;
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
 
 function removeTyping() {
@@ -866,6 +1055,10 @@ function handleSend() {
     const response = generateResponse(intent, text);
     addMessage(response, false);
     document.getElementById('sendBtn').disabled = false;
+    document.getElementById('userInput').focus();
+    setTimeout(() => {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 100);
   }, 900 + Math.random() * 400);
 }
 
