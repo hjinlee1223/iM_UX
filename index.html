@@ -6,981 +6,332 @@
 <title>iM뱅크 UX Writing Bot</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  
   :root {
-    --im-blue: #005BAC;
-    --im-blue-light: #E6F0F9;
-    --im-blue-mid: #3D82C4;
-    --gray-50: #F8F9FA;
-    --gray-100: #F1F3F5;
-    --gray-200: #E9ECEF;
-    --gray-300: #DEE2E6;
-    --gray-500: #ADB5BD;
-    --gray-700: #495057;
-    --gray-900: #212529;
-    --success: #2D9D5F;
-    --border: 1px solid #E2E8F0;
-    --radius: 12px;
-    --radius-sm: 8px;
+    --im-blue: #005BAC; --im-blue-light: #E6F0F9;
+    --gray-50: #F8F9FA; --gray-100: #F1F3F5; --gray-200: #E9ECEF;
+    --gray-300: #DEE2E6; --gray-500: #ADB5BD; --gray-700: #495057; --gray-900: #212529;
+    --border: 1px solid #E2E8F0; --radius: 12px; --radius-sm: 8px;
     --shadow: 0 2px 12px rgba(0,91,172,0.08);
   }
-
-  body {
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #F4F7FB;
-    color: var(--gray-900);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  header {
-    background: var(--im-blue);
-    color: white;
-    padding: 0 24px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,91,172,0.2);
-  }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .logo-badge {
-    background: white;
-    color: var(--im-blue);
-    font-weight: 700;
-    font-size: 13px;
-    padding: 4px 10px;
-    border-radius: 6px;
-    letter-spacing: -0.3px;
-  }
-
-  header h1 {
-    font-size: 16px;
-    font-weight: 500;
-    opacity: 0.95;
-  }
-
-  .header-link {
-    background: rgba(255,255,255,0.15);
-    color: white;
-    text-decoration: none;
-    font-size: 12px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.3);
-    transition: background 0.2s;
-    white-space: nowrap;
-  }
+  body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F4F7FB; color: var(--gray-900); min-height: 100vh; display: flex; flex-direction: column; }
+  header { background: var(--im-blue); color: white; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,91,172,0.2); }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo-badge { background: white; color: var(--im-blue); font-weight: 700; font-size: 13px; padding: 4px 10px; border-radius: 6px; }
+  header h1 { font-size: 16px; font-weight: 500; opacity: 0.95; }
+  .header-link { background: rgba(255,255,255,0.15); color: white; text-decoration: none; font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); white-space: nowrap; }
   .header-link:hover { background: rgba(255,255,255,0.25); }
-
-  .main-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    max-width: 760px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0;
-  }
-
-  .chat-area {
-    flex: 1;
-    padding: 24px 16px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    min-height: calc(100vh - 56px - 140px);
-  }
-
-  .welcome-card {
-    background: white;
-    border: var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow);
-  }
-
-  .welcome-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--im-blue);
-    margin-bottom: 6px;
-  }
-
-  .welcome-desc {
-    font-size: 14px;
-    color: var(--gray-700);
-    line-height: 1.6;
-    margin-bottom: 18px;
-  }
-
-  .quick-tags-label {
-    font-size: 12px;
-    color: var(--gray-500);
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
-
-  .quick-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .tag {
-    background: var(--im-blue-light);
-    color: var(--im-blue);
-    font-size: 13px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    border: 1px solid #C8DCF0;
-    transition: all 0.15s;
-    font-weight: 500;
-  }
-  .tag:hover {
-    background: var(--im-blue);
-    color: white;
-    border-color: var(--im-blue);
-  }
-
-  .message-row {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-  }
-
+  .main-container { flex: 1; display: flex; flex-direction: column; max-width: 760px; width: 100%; margin: 0 auto; }
+  .chat-area { flex: 1; padding: 24px 16px 0; display: flex; flex-direction: column; gap: 16px; min-height: calc(100vh - 56px - 130px); }
+  .welcome-card { background: white; border: var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+  .welcome-title { font-size: 20px; font-weight: 700; color: var(--im-blue); margin-bottom: 6px; }
+  .welcome-desc { font-size: 14px; color: var(--gray-700); line-height: 1.6; margin-bottom: 18px; }
+  .quick-tags-label { font-size: 12px; color: var(--gray-500); margin-bottom: 8px; font-weight: 500; }
+  .quick-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: var(--im-blue-light); color: var(--im-blue); font-size: 13px; padding: 6px 14px; border-radius: 20px; cursor: pointer; border: 1px solid #C8DCF0; transition: all 0.15s; font-weight: 500; }
+  .tag:hover { background: var(--im-blue); color: white; border-color: var(--im-blue); }
+  .message-row { display: flex; gap: 10px; align-items: flex-start; }
   .message-row.user { flex-direction: row-reverse; }
-
-  .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .avatar.bot {
-    background: var(--im-blue);
-    color: white;
-    font-size: 11px;
-  }
-
-  .avatar.user-av {
-    background: var(--gray-200);
-    color: var(--gray-700);
-    font-size: 12px;
-  }
-
-  .bubble {
-    max-width: 86%;
-    padding: 14px 16px;
-    border-radius: var(--radius);
-    font-size: 14px;
-    line-height: 1.7;
-  }
-
-  .bubble.bot {
-    background: white;
-    border: var(--border);
-    box-shadow: var(--shadow);
-    color: var(--gray-900);
-    border-top-left-radius: 4px;
-  }
-
-  .bubble.user {
-    background: var(--im-blue);
-    color: white;
-    border-top-right-radius: 4px;
-  }
-
-  .bubble h3 {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--im-blue);
-    margin: 14px 0 6px;
-  }
-  .bubble.user h3 { color: rgba(255,255,255,0.85); }
-
-  .bubble ul {
-    padding-left: 18px;
-    margin: 6px 0;
-  }
-  .bubble ul li { margin-bottom: 4px; }
-
-  .recommend-box {
-    background: var(--im-blue-light);
-    border: 1px solid #C8DCF0;
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    margin: 10px 0;
-  }
-
-  .recommend-label {
-    font-size: 11px;
-    color: var(--im-blue);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-
-  .recommend-text {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--gray-900);
-  }
-
-  .alt-box {
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    margin-top: 6px;
-  }
-
-  .alt-label {
-    font-size: 11px;
-    color: var(--gray-500);
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 3px;
-  }
-
-  .alt-text {
-    font-size: 14px;
-    color: var(--gray-700);
-    font-weight: 500;
-  }
-
-  .case-section {
-    margin-top: 12px;
-    border-top: 1px solid var(--gray-200);
-    padding-top: 12px;
-  }
-
-  .case-section-title {
-    font-size: 12px;
-    color: var(--gray-500);
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .case-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 8px;
-    padding: 8px 10px;
-    background: var(--gray-50);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200);
-  }
-
-  .case-bank {
-    font-size: 11px;
-    font-weight: 700;
-    color: white;
-    background: var(--gray-500);
-    padding: 2px 7px;
-    border-radius: 4px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .case-content {
-    font-size: 13px;
-    color: var(--gray-700);
-    line-height: 1.5;
-  }
-
-  .figma-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--im-blue);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 14px;
-    background: var(--im-blue-light);
-    border-radius: var(--radius-sm);
-    border: 1px solid #C8DCF0;
-    margin-top: 10px;
-    transition: all 0.15s;
-  }
-  .figma-link:hover { background: var(--im-blue); color: white; }
-
-  .typing-indicator {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 14px 16px;
-    background: white;
-    border: var(--border);
-    border-radius: var(--radius);
-    border-top-left-radius: 4px;
-    width: fit-content;
-    box-shadow: var(--shadow);
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
-    background: var(--gray-300);
-    border-radius: 50%;
-    animation: bounce 1.2s infinite;
-  }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .avatar.bot { background: var(--im-blue); color: white; font-size: 11px; }
+  .avatar.user-av { background: var(--gray-200); color: var(--gray-700); font-size: 12px; }
+  .bubble { max-width: 86%; padding: 14px 16px; border-radius: var(--radius); font-size: 14px; line-height: 1.7; }
+  .bubble.bot { background: white; border: var(--border); box-shadow: var(--shadow); color: var(--gray-900); border-top-left-radius: 4px; }
+  .bubble.user { background: var(--im-blue); color: white; border-top-right-radius: 4px; }
+  .bubble.bot strong { font-weight: 600; color: var(--im-blue); }
+  .bubble.bot h3 { font-size: 13px; font-weight: 700; color: var(--im-blue); margin: 14px 0 6px; }
+  .bubble.bot ul { padding-left: 18px; margin: 6px 0; }
+  .bubble.bot ul li { margin-bottom: 4px; }
+  .bubble.bot p { margin-bottom: 8px; }
+  .bubble.bot p:last-child { margin-bottom: 0; }
+  .recommend-box { background: var(--im-blue-light); border: 1px solid #C8DCF0; border-radius: var(--radius-sm); padding: 12px 14px; margin: 10px 0; }
+  .recommend-label { font-size: 11px; color: var(--im-blue); font-weight: 700; margin-bottom: 4px; }
+  .recommend-text { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+  .alt-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 10px 14px; margin-top: 6px; }
+  .alt-label { font-size: 11px; color: var(--gray-500); font-weight: 700; margin-bottom: 3px; }
+  .alt-text { font-size: 14px; color: var(--gray-700); font-weight: 500; }
+  .case-section { margin-top: 12px; border-top: 1px solid var(--gray-200); padding-top: 12px; }
+  .case-section-title { font-size: 12px; color: var(--gray-500); font-weight: 600; margin-bottom: 8px; }
+  .case-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; padding: 8px 10px; background: var(--gray-50); border-radius: var(--radius-sm); border: 1px solid var(--gray-200); }
+  .case-bank { font-size: 11px; font-weight: 700; color: white; background: var(--gray-500); padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .case-content { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
+  a.figma-link { display: inline-flex; align-items: center; gap: 6px; color: var(--im-blue); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 14px; background: var(--im-blue-light); border-radius: var(--radius-sm); border: 1px solid #C8DCF0; margin-top: 10px; }
+  a.figma-link:hover { background: var(--im-blue); color: white; }
+  .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 14px 16px; background: white; border: var(--border); border-radius: var(--radius); border-top-left-radius: 4px; width: fit-content; box-shadow: var(--shadow); }
+  .dot { width: 7px; height: 7px; background: var(--gray-300); border-radius: 50%; animation: bounce 1.2s infinite; }
   .dot:nth-child(2) { animation-delay: 0.2s; }
   .dot:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes bounce {
-    0%, 60%, 100% { transform: translateY(0); background: var(--gray-300); }
-    30% { transform: translateY(-6px); background: var(--im-blue); }
-  }
-
-  .input-area {
-    position: sticky;
-    bottom: 0;
-    background: #F4F7FB;
-    padding: 12px 16px 20px;
-    border-top: var(--border);
-  }
-
-  .input-wrap {
-    display: flex;
-    gap: 10px;
-    background: white;
-    border: 1.5px solid var(--gray-200);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    transition: border-color 0.2s;
-    box-shadow: var(--shadow);
-  }
-
-  .input-wrap:focus-within {
-    border-color: var(--im-blue);
-    box-shadow: 0 0 0 3px rgba(0,91,172,0.1);
-  }
-
-  #userInput {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    color: var(--gray-900);
-    background: transparent;
-    font-family: inherit;
-    resize: none;
-    min-height: 20px;
-    max-height: 120px;
-    line-height: 1.5;
-  }
-
+  @keyframes bounce { 0%,60%,100% { transform:translateY(0); background:var(--gray-300); } 30% { transform:translateY(-6px); background:var(--im-blue); } }
+  .input-area { position: sticky; bottom: 0; background: #F4F7FB; padding: 12px 16px 20px; border-top: var(--border); }
+  .input-wrap { display: flex; gap: 10px; background: white; border: 1.5px solid var(--gray-200); border-radius: var(--radius); padding: 10px 14px; transition: border-color 0.2s; box-shadow: var(--shadow); }
+  .input-wrap:focus-within { border-color: var(--im-blue); box-shadow: 0 0 0 3px rgba(0,91,172,0.1); }
+  #userInput { flex: 1; border: none; outline: none; font-size: 14px; color: var(--gray-900); background: transparent; font-family: inherit; resize: none; min-height: 20px; max-height: 120px; line-height: 1.5; }
   #userInput::placeholder { color: var(--gray-500); }
-
-  .send-btn {
-    background: var(--im-blue);
-    color: white;
-    border: none;
-    border-radius: var(--radius-sm);
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    align-self: flex-end;
-    transition: background 0.15s;
-  }
+  .send-btn { background: var(--im-blue); color: white; border: none; border-radius: var(--radius-sm); width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; align-self: flex-end; transition: background 0.15s; }
   .send-btn:hover { background: #004A91; }
   .send-btn:disabled { background: var(--gray-300); cursor: not-allowed; }
-
   .send-btn svg { width: 16px; height: 16px; }
-
-  .hint-text {
-    text-align: center;
-    font-size: 11px;
-    color: var(--gray-500);
-    margin-top: 8px;
-  }
-
-  .badge {
-    display: inline-block;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .badge.blue { background: var(--im-blue-light); color: var(--im-blue); }
-  .badge.green { background: #E8F5EE; color: #1A7A42; }
-  .badge.gray { background: var(--gray-100); color: var(--gray-700); }
-
-  @media (max-width: 480px) {
-    .bubble { max-width: 92%; }
-    header h1 { font-size: 14px; }
-    .header-link { display: none; }
-  }
+  .hint-text { text-align: center; font-size: 11px; color: var(--gray-500); margin-top: 8px; }
+  @media (max-width: 480px) { .bubble { max-width: 92%; } header h1 { font-size: 14px; } .header-link { display: none; } }
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-left">
     <div class="logo-badge">iM뱅크</div>
     <h1>UX Writing Bot</h1>
   </div>
-  <a class="header-link" href="https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1" target="_blank">
-    📐 가이드 문서 열기
-  </a>
+  <a class="header-link" href="https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1" target="_blank">📐 가이드 문서 열기</a>
 </header>
 
 <div class="main-container">
   <div class="chat-area" id="chatArea">
     <div class="welcome-card">
       <div class="welcome-title">안녕하세요! iM뱅크 UX Writing Bot이에요 👋</div>
-      <div class="welcome-desc">
-        iM뱅크 UX Writing 가이드 기준에 따라 UI 문구, 컴포넌트 추천, 에러 메시지 등을 도와드립니다.<br>
-        질문이 짧거나 모호해도 괜찮아요. 함께 정리해 드릴게요.
-      </div>
-      <div class="quick-tags-label">자주 묻는 질문으로 시작해보세요</div>
+      <div class="welcome-desc">iM뱅크 UX Writing 가이드 기준으로 UI 문구, 컴포넌트 추천, 카피를 도와드립니다.<br>단어 하나만 입력해도 맥락을 파악해서 바로 답변드려요.</div>
+      <div class="quick-tags-label">빠른 시작</div>
       <div class="quick-tags">
-        <div class="tag" onclick="sendQuick('에러 메시지 문구를 만들고 싶어요')">에러 메시지 작성</div>
-        <div class="tag" onclick="sendQuick('바텀시트와 모달팝업 중 뭘 써야 할까요?')">바텀시트 vs 모달</div>
-        <div class="tag" onclick="sendQuick('빈 화면(empty state) 문구가 필요해요')">Empty State 문구</div>
-        <div class="tag" onclick="sendQuick('로딩 중 메시지는 어떻게 쓰나요?')">로딩 문구</div>
-        <div class="tag" onclick="sendQuick('약관 동의 바텀시트 가이드가 궁금해요')">약관형 가이드</div>
-        <div class="tag" onclick="sendQuick('UX Writing Guide 문서 링크를 알려줘')">가이드 문서 링크</div>
+        <div class="tag" onclick="sendQuick('에러 메시지')">에러 메시지</div>
+        <div class="tag" onclick="sendQuick('바텀시트 vs 모달')">바텀시트 vs 모달</div>
+        <div class="tag" onclick="sendQuick('empty state')">Empty State</div>
+        <div class="tag" onclick="sendQuick('로딩')">로딩 문구</div>
+        <div class="tag" onclick="sendQuick('iM스마트통장 배너 문구')">배너 문구</div>
+        <div class="tag" onclick="sendQuick('가이드 문서 링크')">가이드 문서</div>
       </div>
     </div>
   </div>
 
   <div class="input-area">
     <div class="input-wrap">
-      <textarea id="userInput" placeholder="UI 문구, 컴포넌트, 상황을 자유롭게 입력해주세요..." rows="1"></textarea>
+      <textarea id="userInput" placeholder="단어만 입력해도 돼요. 예: 에러, 배너, 로딩, 바텀시트..." rows="1"></textarea>
       <button class="send-btn" id="sendBtn" onclick="handleSend()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-        </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
       </button>
     </div>
-    <div class="hint-text">iM뱅크 UX 가이드 기반으로 답변합니다 · 가이드에 없는 내용은 없다고 안내드려요</div>
+    <div class="hint-text">iM뱅크 UX 가이드 기반 · 가이드에 없는 내용은 없다고 안내드려요</div>
   </div>
 </div>
 
 <script>
-const GUIDE_DATA = {
-  figma_url: "https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1",
-  
-  patterns: {
-    error_message: {
-      tone: "명확하고 친절한 어투, 원인보다는 해결 방법 중심",
-      length: "최대 20자 이내",
-      avoid: ["기술 용어", "시스템 내부 코드"],
-      tip: "사용자가 무엇을 해야 하는지 알 수 있게 표현",
-      good: ["다시 시도해주세요", "비밀번호를 확인해주세요"],
-      bad: ["에러가 발생했습니다", "시스템 오류"]
-    },
-    empty_state: {
-      tone: "긍정적이고 유도적인 어투",
-      length: "두 문장 이내, 간결한 메시지",
-      tip: "무엇을 할 수 있는지 행동을 제시하면 좋음",
-      good: ["아직 내역이 없어요", "지금 바로 시작해보세요"],
-      bad: ["데이터가 없습니다", "결과 없음"]
-    },
-    loading_state: {
-      tone: "부드럽고 안정감을 주는 표현",
-      length: "최대 한 문장",
-      tip: "사용자의 불안감을 줄이고, 기다림의 의미를 알려줌",
-      good: ["잠시만 기다려주세요", "불러오는 중이에요"],
-      bad: ["로딩 중", "데이터 처리 중"]
-    }
-  },
+const FIGMA_URL = "https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1";
 
-  bottom_sheet: {
-    description: "화면 하단에서 슬라이드 형태로 나타나는 UI로, 사용자의 추가 작업(정보 확인/선택/입력 등)을 지원",
-    use_when: ["단일 목적성 태스크", "빠른 입력/선택/확인 필요", "현재 화면과 연계된 흐름 유지"],
-    types: {
-      텍스트형: { title: "최대 16자, 문장형 가능", subtitle: "필요시 2줄까지 제공", button: "확인/취소 CTA 제공", close: "닫기 버튼 포함 권장" },
-      입력형: { title: "명확한 지시 포함", helper_text: "입력 유도형 문장 사용", input: "플레이스홀더, 헬퍼텍스트 포함 가능", close: "프로세스 완료 전 닫기 비활성화 가능" },
-      날짜선택형: { title: "16자 이내 문장형", button: "확인/취소", close: "닫기 버튼 포함, dim 영역 탭 시 닫힘" },
-      약관형: { content: "불릿 또는 단락 구분 가능", button: "동의/비동의 버튼", close: "강제성 있는 경우 닫기 미제공" }
-    }
-  },
+const SYSTEM_PROMPT = `당신은 iM뱅크 UX Writing 가이드 전문가 봇입니다.
 
-  modal_popup: {
-    description: "중요 알림, 결정 유도 등 흐름을 멈추고 즉각적인 반응을 유도하는 UI",
-    use_when: ["중요한 안내 또는 경고", "확인/취소 등 즉각 반응 필요", "화면 흐름 중단 후 단일 작업"],
-    types: ["기본형", "타이틀형", "이미지형", "공지형"]
-  }
-};
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[핵심 행동 원칙]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- 질문이 단어 하나여도, 오타가 있어도, 짧아도 맥락 파악 후 즉시 답변
+- 추가 설명 요구 없이 가능한 범위에서 바로 핵심을 답한다
+- 추천 문구 먼저, 원칙은 간결하게
+- 서론/마무리 멘트 생략, 바로 핵심부터
+- 문구 생성 시 반드시 아래 [톤·어투 기준]과 [용어 대치 사전]을 적용한다
+- 가이드에 없는 항목(배너, CTA, 완료, 토스트, 타이틀 일반 등)은 답변 말미에 "※ 이 항목은 공식 가이드에 포함되지 않은 내용입니다. 가이드의 톤·어투 기준을 적용해 제안했습니다."라고 반드시 명시한다
+- 용어 교정 요청 시: 대치어를 먼저 제시하고 이유를 한 줄로 설명한다
+- 문구 안에 [용어 대치 사전]의 기존어가 포함된 경우 자동으로 대치어로 교체한다
 
-const CASES = {
-  error_message: [
-    { bank: "카카오뱅크", text: "잠깐! 확인이 필요해요 + 구체적 안내 문구로 친근한 어투 유지" },
-    { bank: "토스", text: "'다시 시도해 주세요' 외 원인을 한 줄로 간결하게 병기" },
-    { bank: "KB국민은행", text: "오류 코드 대신 상황별 해결 행동을 명확히 제시" }
-  ],
-  empty_state: [
-    { bank: "카카오뱅크", text: "일러스트 + '아직 없어요' 형태의 구어체 + CTA 버튼 조합" },
-    { bank: "토스", text: "감성적 문구('아직 내역이 없어요')와 행동 유도 버튼을 함께 배치" },
-    { bank: "신한SOL", text: "상황별 Empty State 세분화, 조회 실패와 데이터 없음을 분리 안내" }
-  ],
-  loading_state: [
-    { bank: "카카오뱅크", text: "스켈레톤 UI + '잠깐, 불러오고 있어요' 조합으로 대기 불안 감소" },
-    { bank: "토스", text: "애니메이션 + 짧고 따뜻한 문구('잠시만요') 활용" },
-    { bank: "KB국민은행", text: "로딩 바 + '처리 중입니다' 수준이나 최근 친근한 어투로 개선 추세" }
-  ],
-  bottom_sheet: [
-    { bank: "카카오뱅크", text: "dim 처리 + 드래그 핸들 제공, 단일 목적 액션에 집중" },
-    { bank: "토스", text: "바텀시트 내 스크롤 허용, 복잡한 선택지도 바텀시트 안에 처리" },
-    { bank: "신한SOL", text: "약관형은 별도 전체화면 전환 대신 바텀시트 내 긴 스크롤로 처리" }
-  ],
-  modal: [
-    { bank: "카카오뱅크", text: "중요 경고에만 모달 사용, 일반 안내는 바텀시트로 분리" },
-    { bank: "토스", text: "모달은 최소화, 대신 인라인 피드백 강화 정책 적용" },
-    { bank: "KB국민은행", text: "보안/금융거래 확인에 모달 집중 사용, 2버튼 구조 일관성 유지" }
-  ]
-};
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[톤·어투 기준] ← 모든 문구 생성에 적용
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- 친절하고 명확한 구어체 (예: "~해주세요", "~됐어요", "~해보세요")
+- 원인 나열보다 해결 행동 중심
+- 기술 용어·시스템 코드 사용 금지
+- 부정 표현 지양, 긍정·행동 유도형 표현 사용
+- 피동형 지양 → 능동형 사용 (예: "처리되었습니다" → "처리했어요")
+- 한자어·어려운 어휘 지양 → 쉬운 한국어로 (예: "불이익" → "손해", "요건" → "조건")
+- 문장 종결: "~했습니다" 격식체보다 "~했어요" "~해주세요" 권장
+- 불필요한 경어 중복 사용 금지
 
-function extractProduct(text) {
-  const products = ['iM스마트통장','스마트통장','비상금전용통장','비상금통장','iM직장인대출','iM주택담보대출','iM전세대출','iM적금','iM예금','iM펀드','iM카드','iM뱅크'];
-  for (const p of products) { if (text.includes(p)) return p; }
-  return null;
-}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[용어 대치 사전] ← 문구 생성·교정 시 자동 적용
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+브랜드/기관명:
+- 당행, 본 은행, 당 은행, 대구은행, DGB, 아이엠뱅크 → iM뱅크
+- 고객센터, 콜센터, 당행 고객센터 → iM뱅크 고객센터(1566-5050/1588-5050)
+- 지점 → 영업점
+- 모바일앱뱅킹, 스마트뱅킹, 스마트폰뱅킹 → 모바일뱅킹
+- iM뱅크 모바일 앱, iM뱅킹 앱 → iM뱅크 앱
 
-function analyzeIntent(text) {
-  const t = text.toLowerCase();
-  const orig = text;
+금융 용어:
+- 수신 → 예적금
+- 여신, 대부 → 대출
+- 통장대출 → 마이너스통장
+- 차주 → 대출고객
+- 요구불 → 입출금 계좌
+- 평잔 → 평균잔액
+- 적요 → 거래내용
+- 시재 → 보유 현금
+- 원장잔액 → 계좌잔액
+- 잔고 → 수신:총잔액 / 투자:평가금액 / 대출:대출잔액
+- 후취보수/선취보수 → 후취수수료/선취수수료
+- 리볼빙, 회전결제 → 일부결제이월약정(리볼빙)
+- 변제 → 상환
+- 불입 → 납입/납부
+- 수납 → 납부
+- 이율, 이자율 → 이자율
+- 거치기간 → 대출:이자만 납부하는 기간 / 예금:납입전 유예기간
+- 난수일련번호 → 쿠폰번호
+- 표면잔액 → 대출:대출잔액 / 투자:투자원금
 
-  if (t.includes('피그마') || t.includes('figma') || t.includes('가이드 문서') || (t.includes('링크') && t.includes('가이드'))) return 'figma_link';
-  if (t.includes('에러') || t.includes('오류') || t.includes('실패') || t.includes('error')) return 'error_message';
-  if (t.includes('빈 화면') || t.includes('empty') || t.includes('결과 없') || t.includes('내역 없') || t.includes('데이터 없')) return 'empty_state';
-  if (t.includes('로딩') || t.includes('불러오') || t.includes('loading') || t.includes('처리 중')) return 'loading_state';
-  if (t.includes('바텀시트') && t.includes('모달')) return 'compare_bs_modal';
-  if (t.includes('약관') || t.includes('동의') || t.includes('개인정보')) return 'terms_sheet';
-  if (t.includes('날짜') || t.includes('달력') || t.includes('캘린더') || t.includes('픽커')) return 'date_sheet';
-  if (t.includes('otp') || (t.includes('입력') && (t.includes('시트') || t.includes('바텀') || t.includes('필드')))) return 'input_sheet';
-  if (t.includes('바텀시트') || t.includes('bottom sheet')) return 'bottom_sheet';
-  if (t.includes('모달') || t.includes('팝업')) return 'modal';
-  if (t.includes('배너')) return 'banner_copy';
-  if (t.includes('타이틀') || t.includes('제목') || (t.includes('title') && !t.includes('서브타이틀'))) return 'title_copy';
-  if (t.includes('완료') || t.includes('성공') || (t.includes('처리') && t.includes('됐'))) return 'success_message';
-  if (t.includes('버튼') || t.includes('cta')) return 'button_copy';
-  if (t.includes('토스트') || t.includes('snackbar')) return 'toast_message';
-  if (t.includes('추천 문구') || t.includes('추천문구') || t.includes('가입 추천') || t.includes('가입추천') || t.includes('가입 문구') || t.includes('가입문구') || (t.includes('추천') && extractProduct(orig))) return 'product_recommend';
-  if (t.includes('상세') || t.includes('상품 정보') || t.includes('상품정보')) return 'product_detail';
-  if (t.includes('문구') || t.includes('카피') || t.includes('예시') || t.includes('알려줘') || t.includes('써줘') || t.includes('추천')) return 'writing_help_detail';
-  return 'unknown';
-}
+일반 용어:
+- 클릭하다, 누르다, 터치하다 → 선택하다
+- 상세보기, 자세히보기 → 자세히 보기
+- 푸시알림, PUSH, push → 앱알림
+- 바이오정보, 생체정보 → 생체정보(FACE ID, 지문)
+- 핸드폰, 휴대전화 → 휴대폰
+- 스마트단말, 단말기, 기기 → 스마트폰 또는 휴대폰
+- 어플, 어플리케이션, APP → 앱
+- 문자, 메시지, SMS, LMS → 문자메시지
+- 보안카드, 씨크리트카드 → 보안카드
+- 간편비밀번호, 인증 비밀번호, 퀵인증 비밀번호 → 간편비밀번호
+- 받을 계좌 → 받는 계좌
+- 가입하다, 개설하다, 만들다 → 상품:가입하기 / 통장:개설하기
+- 인증수단, 인증방식 → 인증방법
+- ARS 인증, 전화 인증 → 전화 인증
+- 통장, 계좌 → 계좌 (상품명 맥락에 따라 수정)
+- 승인대기 → 수락대기
+- 배송지, 수령지 → 받는 곳
+- 서류교부방법 → 서류 받는방법
+- 수령하다 → 받다
+- 소지하다 → 가지다/있다
+- 성명, 성함 → 이름
+- 불이익 → 손해
+- 진위여부, 진위 → 사실여부
+- 상이 → 다름
+- 불일치 → 일치하지 않음
+- 명칭 → 이름
+- 열람 → 조회/확인
+- 존재/존재하다 → 있음/있습니다
+- 세부 → 자세한
+- 상기 → 위
+- 서면 → 종이 문서
+- 세액 → 세금
+- 통지/통보하다 → 알리다/안내하다
+- 잔여 → 남은
+- 재촬영, 재OO → 다시 촬영, 다시 OO
+- 유선 → 전화
+- 통상 → 일반적으로
+- 요건 → 조건
+- 산출 → 계산
+- 선행 → 우선
+- 전일 → 하루 전
+- 익영업일 → 다음 영업일
+- 전영업일 → 하루 전(영업일 기준)
+- 20영업일 → 20일(영업일 기준)
+- 자택 → 집
+- 근무처, 회사 → 직장
+- 타행 → 다른 은행
+- 신규 (단독 사용 금지) → 문장 맥락에 따라 수정
+- 미OO → OO하지 않은/되지 않은
 
-function generateResponse(intent, userText) {
-  const g = GUIDE_DATA;
+표현 교정:
+- 알아두세요, 알아두실 사항, 안내사항, 확인사항, 유의사항 → 앱:유의사항 / 메시지:확인해주세요
+- 동의/비동의, 동의함/동의하지 않음 → 동의/동의 안함
+- 예/아니에요, 네/아니요 → 예/아니요
+- CASHBACK → 캐시백
+- ON/OFF → 켜기/끄기
+- ex, Ex → 예.
+- FAX → 팩스
+- ID/PW → 아이디/비밀번호
+- 되었습니다(피동) → 했습니다(능동)
+- 토/일요일·공휴일, 주말 및 휴일 → 토/일/공휴일
+- 서비스가 제한됩니다 → 서비스를 이용할 수 없습니다
+- 취급이 불가한 상품입니다 → 신청할 수 없는 상품입니다
+- 신청해 주세요 → 신청해주세요 (띄어쓰기 없이)
+- 상담직원, 권유직원 → 추천직원
+- 사업자 번호 → 사업자등록번호
+- 주민번호 → 주민등록번호
+- 외국인신분증 → 외국인등록증
 
-  if (intent === 'figma_link') {
-    return `<span class="badge blue">가이드 문서</span>
-<p style="margin-bottom:10px;">iM뱅크 UX Writing Guide 피그마 문서 링크예요!</p>
-<a class="figma-link" href="${g.figma_url}" target="_blank">
-  📐 UI Guide 피그마 문서 바로 가기 →
-</a>`;
-  }
+영어 단독 유지 (한글 변환 금지):
+- ARS, ATM, OS, CVC, Tip, OTP, FACE ID
 
-  if (intent === 'error_message') {
-    const p = g.patterns.error_message;
-    return `<span class="badge blue">에러 메시지 가이드</span>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>어투: ${p.tone}</li>
-  <li>길이: ${p.length}</li>
-  <li>피해야 할 표현: ${p.avoid.join(', ')}</li>
-  <li>핵심: ${p.tip}</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">추천 문구 예시</div>
-  <div class="recommend-text">"${p.good[0]}"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">차선 문구</div>
-  <div class="alt-text">"${p.good[1]}"</div>
-</div>
-<p style="margin-top:10px;font-size:13px;color:#888;">❌ 지양: "${p.bad[0]}", "${p.bad[1]}"</p>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 참고 사례</div>
-  ${CASES.error_message.map(c => `
-  <div class="case-item">
-    <div class="case-bank">${c.bank}</div>
-    <div class="case-content">${c.text}</div>
-  </div>`).join('')}
-</div>`;
-  }
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[공식 가이드 데이터] ← JSON 파일 기반
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  if (intent === 'empty_state') {
-    const p = g.patterns.empty_state;
-    return `<span class="badge blue">Empty State 가이드</span>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>어투: ${p.tone}</li>
-  <li>길이: ${p.length}</li>
-  <li>핵심: ${p.tip}</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">추천 문구 (메인)</div>
-  <div class="recommend-text">"${p.good[0]}"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">추천 문구 (서브 · 행동 유도)</div>
-  <div class="alt-text">"${p.good[1]}"</div>
-</div>
-<p style="margin-top:10px;font-size:13px;color:#888;">❌ 지양: "${p.bad[0]}", "${p.bad[1]}"</p>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 참고 사례</div>
-  ${CASES.empty_state.map(c => `
-  <div class="case-item">
-    <div class="case-bank">${c.bank}</div>
-    <div class="case-content">${c.text}</div>
-  </div>`).join('')}
-</div>`;
-  }
+## 컴포넌트
 
-  if (intent === 'loading_state') {
-    const p = g.patterns.loading_state;
-    return `<span class="badge blue">로딩 상태 가이드</span>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>어투: ${p.tone}</li>
-  <li>길이: ${p.length}</li>
-  <li>핵심: ${p.tip}</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">추천 문구</div>
-  <div class="recommend-text">"${p.good[0]}"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">차선 문구</div>
-  <div class="alt-text">"${p.good[1]}"</div>
-</div>
-<p style="margin-top:10px;font-size:13px;color:#888;">❌ 지양: "${p.bad[0]}", "${p.bad[1]}"</p>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 참고 사례</div>
-  ${CASES.loading_state.map(c => `
-  <div class="case-item">
-    <div class="case-bank">${c.bank}</div>
-    <div class="case-content">${c.text}</div>
-  </div>`).join('')}
-</div>`;
-  }
+### 바텀시트
+- 용도: 현재 화면 흐름 유지하면서 부가 작업
+- 조건: 단일 목적, 빠른 입력/선택/확인, 현재 화면 연계 흐름
+- 타입: 텍스트형, 입력형, 약관형, 날짜선택형, 선택형, 필터형, 이미지형, 공유형, 암호형, 조합형, 마케팅형
+- 텍스트형: 타이틀 최대 16자, 서브타이틀 2줄까지, 버튼 확인/취소
+- 입력형: OTP/비밀번호/계좌 입력, 헬퍼텍스트 포함, 닫기 비활성화 가능
+- 날짜선택형: 휠픽커(요일 불필요, 기본권장) / 캘린더픽커(요일 필요)
+- 약관형: 불릿/단락 구분, 동의/동의 안함 버튼, 필수면 닫기 미제공
 
-  if (intent === 'compare_bs_modal') {
-    return `<span class="badge blue">컴포넌트 비교</span>
-<h3>📌 바텀시트를 써야 할 때</h3>
-<ul>
-  <li>현재 화면 흐름을 유지하면서 부가 작업이 필요할 때</li>
-  <li>단일 목적 입력/선택/확인이 필요할 때</li>
-  <li>빠른 인터랙션이 중심일 때 (날짜 선택, OTP 입력 등)</li>
-</ul>
-<h3>🚨 모달팝업을 써야 할 때</h3>
-<ul>
-  <li>반드시 인지하거나 즉각 행동해야 할 중요 경고·알림</li>
-  <li>화면 흐름을 의도적으로 중단해야 하는 경우</li>
-  <li>확인/취소 등 즉각 반응이 필수인 경우</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">판단 기준 요약</div>
-  <div class="recommend-text">흐름 유지 → 바텀시트 / 흐름 중단 → 모달</div>
-</div>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 사용 패턴</div>
-  ${CASES.modal.map(c => `
-  <div class="case-item">
-    <div class="case-bank">${c.bank}</div>
-    <div class="case-content">${c.text}</div>
-  </div>`).join('')}
-</div>`;
-  }
+### 모달팝업
+- 용도: 흐름 중단 후 즉각 반응 유도
+- 조건: 중요 경고/안내, 확인/취소 필요, 단일 작업
+- 타입: 기본형, 타이틀형, 이미지형, 공지형
 
-  if (intent === 'bottom_sheet') {
-    const bs = g.bottom_sheet;
-    return `<span class="badge blue">바텀시트 가이드</span>
-<p style="margin-bottom:8px;">${bs.description}</p>
-<h3>✅ 사용 조건</h3>
-<ul>${bs.use_when.map(u => `<li>${u}</li>`).join('')}</ul>
-<h3>📋 타입 종류</h3>
-<ul>${Object.keys(bs.types).map(t => `<li><strong>${t}</strong></li>`).join('')}</ul>
-<p style="font-size:13px;color:#666;margin-top:4px;">어떤 타입을 사용할지 모르겠다면 상황을 알려주세요. 맞는 타입을 추천해 드릴게요!</p>
-<a class="figma-link" href="${g.figma_url}" target="_blank">📐 피그마 가이드 보기 →</a>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 참고 사례</div>
-  ${CASES.bottom_sheet.map(c => `
-  <div class="case-item">
-    <div class="case-bank">${c.bank}</div>
-    <div class="case-content">${c.text}</div>
-  </div>`).join('')}
-</div>`;
-  }
+### 바텀시트 vs 모달
+- 흐름 유지 → 바텀시트
+- 흐름 중단 필요 → 모달
 
-  if (intent === 'terms_sheet') {
-    const t = g.bottom_sheet.types['약관형'];
-    return `<span class="badge blue">약관형 바텀시트</span>
-<h3>✅ 디자인 가이드</h3>
-<ul>
-  <li>콘텐츠: ${t.content}</li>
-  <li>버튼: ${t.button}</li>
-  <li>닫기: ${t.close}</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">주요 포인트</div>
-  <div class="recommend-text">필수 동의면 닫기(X) 버튼 제거</div>
-</div>
-<a class="figma-link" href="${g.figma_url}" target="_blank">📐 피그마 가이드 보기 →</a>`;
-  }
+## UX Writing 패턴 (공식 가이드)
 
-  if (intent === 'date_sheet') {
-    return `<span class="badge blue">날짜선택형 바텀시트</span>
-<h3>📋 서브타입 구분</h3>
-<ul>
-  <li><strong>휠 픽커</strong>: 요일 불필요한 단순 선택. 월/일만 선택 가능 → 기본 권장 방식</li>
-  <li><strong>캘린더 픽커</strong>: 요일이 필요한 경우. 달력 형태로 날짜 선택, 연월은 휠 전환</li>
-</ul>
-<h3>✅ 디자인 가이드</h3>
-<ul>
-  <li>타이틀: 16자 이내 문장형</li>
-  <li>버튼: 확인/취소</li>
-  <li>닫기: dim 영역 탭 시 닫힘</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">요일 필요 여부로 판단</div>
-  <div class="recommend-text">요일 불필요 → 휠 픽커 / 요일 필요 → 캘린더</div>
-</div>`;
-  }
+### 에러 메시지
+- 어투: 친절, 해결 방법 중심, 최대 20자
+- 금지: 기술 용어, 시스템 코드
+- 추천: "다시 시도해주세요" / "비밀번호를 확인해주세요"
+- 지양: "에러가 발생했습니다" / "시스템 오류"
 
-  if (intent === 'input_sheet') {
-    const t = g.bottom_sheet.types['입력형'];
-    return `<span class="badge blue">입력형 바텀시트</span>
-<h3>✅ 디자인 가이드</h3>
-<ul>
-  <li>타이틀: ${t.title}</li>
-  <li>헬퍼 텍스트: ${t.helper_text}</li>
-  <li>입력 필드: ${t.input}</li>
-  <li>닫기: ${t.close}</li>
-</ul>
-<h3>주요 사용 사례</h3>
-<ul>
-  <li>OTP 입력</li>
-  <li>비밀번호 입력</li>
-  <li>계좌 정보 작성</li>
-</ul>`;
-  }
+### Empty State (빈 화면)
+- 어투: 긍정적, 유도적, 2문장 이내
+- 추천: "아직 내역이 없어요" / "지금 바로 시작해보세요"
+- 지양: "데이터가 없습니다" / "결과 없음"
 
-  // ── 타이틀 문구 ──
-  if (intent === 'title_copy') {
-    const product = extractProduct(userText) || '상품명';
-    return `<span class="badge blue">타이틀 문구 가이드</span>
-<p style="margin-bottom:10px;">iM뱅크 가이드 기준으로 타이틀은 <strong>최대 16자, 문장형</strong>으로 작성해요.</p>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>핵심 정보를 앞에 배치 (상품명 → 핵심 혜택)</li>
-  <li>명사형 종결보다 서술형·문장형 권장</li>
-  <li>16자 초과 시 서브타이틀로 분리</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">추천 타이틀 예시 — ${product} 상세</div>
-  <div class="recommend-text">"${product} 상세 정보"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">차선 (서술형)</div>
-  <div class="alt-text">"${product}의 혜택을 확인하세요"</div>
-</div>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 참고 사례</div>
-  <div class="case-item"><div class="case-bank">카카오뱅크</div><div class="case-content">상품명 + 한 줄 핵심 혜택 조합. 예: "모임통장 · 같이 모아봐요"</div></div>
-  <div class="case-item"><div class="case-bank">토스</div><div class="case-content">타이틀을 최소화하고 서브 텍스트에 혜택 강조. "토스 저금통" 단일 명사형 사용</div></div>
-  <div class="case-item"><div class="case-bank">신한SOL</div><div class="case-content">상품명 그대로 타이틀, 서브에 금리·혜택 수치 명시 방식</div></div>
-</div>`;
-  }
+### 로딩 상태
+- 어투: 부드럽고 안정감, 1문장 이내
+- 추천: "잠시만 기다려주세요" / "불러오는 중이에요"
+- 지양: "로딩 중" / "데이터 처리 중"
 
-  // ── 배너 문구 ──
-  if (intent === 'banner_copy') {
-    const product = extractProduct(userText) || '상품';
-    return `<span class="badge blue">배너 문구 가이드</span>
-<p style="margin-bottom:10px;">배너는 <strong>짧고 임팩트 있게</strong>, 혜택 중심으로 작성해요. 가이드상 타이틀 16자 원칙을 준용해요.</p>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>핵심 혜택·수치를 첫 줄에 배치</li>
-  <li>행동 유도(CTA) 문구와 짝을 이루도록 작성</li>
-  <li>부정 표현 지양, 긍정·이득 중심 어투 사용</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">추천 배너 문구 — ${product}</div>
-  <div class="recommend-text">"지금 바로 ${product} 만나보세요"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">차선 (혜택 강조형)</div>
-  <div class="alt-text">"${product}으로 더 스마트하게"</div>
-</div>
-<p style="font-size:13px;color:#666;margin-top:8px;">💡 상품의 핵심 혜택(금리, 한도, 특징)을 알려주시면 더 정확한 문구를 드릴 수 있어요!</p>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 참고 사례</div>
-  <div class="case-item"><div class="case-bank">카카오뱅크</div><div class="case-content">숫자+혜택 강조: "연 최대 OO% · 지금 개설하기" 형태로 수치 전면 배치</div></div>
-  <div class="case-item"><div class="case-bank">토스</div><div class="case-content">감성 카피 + CTA 분리: "돈 관리, 이제 쉽게" / 버튼에 "시작하기" 단독 배치</div></div>
-  <div class="case-item"><div class="case-bank">KB국민은행</div><div class="case-content">이벤트 기간·조건 명시형: "OO까지, KB스타적금 금리 우대"</div></div>
-</div>`;
-  }
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[가이드 외 항목] ← 톤·어투·용어 기준 적용해 제안, 반드시 명시
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  // ── 상품 가입 추천 문구 ──
-  if (intent === 'product_recommend') {
-    const product = extractProduct(userText) || '상품';
-    return `<span class="badge blue">가입 추천 문구 가이드</span>
-<p style="margin-bottom:10px;">가입 추천 문구는 <strong>긍정·유도 어투</strong>로, 사용자가 혜택을 즉시 체감할 수 있게 작성해요.</p>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>혜택/특징을 구체적 수치나 상황으로 표현</li>
-  <li>"지금", "바로", "쉽게" 등 즉각성 표현 활용</li>
-  <li>명령형보다 제안·권유형 어투 권장</li>
-  <li>두 문장 이내로 간결하게</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">추천 문구 — ${product}</div>
-  <div class="recommend-text">"언제든 자유롭게, ${product}으로 시작해보세요"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">차선 문구</div>
-  <div class="alt-text">"${product}, 지금 바로 만들어보세요"</div>
-</div>
-<p style="font-size:13px;color:#666;margin-top:8px;">💡 상품의 주요 혜택(금리, 한도, 조건)을 알려주시면 맞춤 문구를 드릴게요!</p>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 참고 사례</div>
-  <div class="case-item"><div class="case-bank">카카오뱅크</div><div class="case-content">"비상금 대출, 필요할 때 바로" — 상황 공감 + 즉시성 강조</div></div>
-  <div class="case-item"><div class="case-bank">토스</div><div class="case-content">"내 돈을 더 잘 모을 수 있어요" — 1인칭 사용자 시점으로 혜택 서술</div></div>
-  <div class="case-item"><div class="case-bank">신한SOL</div><div class="case-content">"지금 가입하면 OO 혜택까지" — 즉시 행동 유도 + 조건부 혜택 명시</div></div>
-</div>`;
-  }
+### 타이틀 (바텀시트 기준 준용)
+- 최대 16자, 문장형, 핵심 정보 앞 배치
+- 16자 초과 시 서브타이틀로 분리
 
-  // ── 상품 상세 정보 ──
-  if (intent === 'product_detail') {
-    const product = extractProduct(userText) || '상품';
-    return `<span class="badge blue">상품 상세 정보 문구 가이드</span>
-<p style="margin-bottom:10px;">상품 상세 화면의 텍스트는 <strong>정보 전달 우선, 군더더기 없이</strong> 작성해요.</p>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>타이틀: 상품명 (16자 이내)</li>
-  <li>서브타이틀: 핵심 혜택 한 줄 요약 (2줄 이내)</li>
-  <li>본문: 수치·조건은 강조, 주의사항은 별도 섹션 분리</li>
-  <li>금융 용어는 풀어서 표현 (예: "연 이자율" → "1년 동안 받는 이자")</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">타이틀 예시 — ${product}</div>
-  <div class="recommend-text">"${product}"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">서브타이틀 예시</div>
-  <div class="alt-text">"필요할 때 언제든 자유롭게 입출금되는 통장"</div>
-</div>
-<div class="case-section">
-  <div class="case-section-title">🏦 타행 참고 사례</div>
-  <div class="case-item"><div class="case-bank">카카오뱅크</div><div class="case-content">타이틀 단순화 + 핵심 수치(금리, 한도)를 인포그래픽으로 시각화</div></div>
-  <div class="case-item"><div class="case-bank">토스</div><div class="case-content">혜택 → 조건 → 주의사항 순 레이아웃, 각 섹션 헤더 간결하게</div></div>
-  <div class="case-item"><div class="case-bank">신한SOL</div><div class="case-content">테이블형 정보 제공 + 핵심 혜택 배지(Badge) 강조 방식</div></div>
-</div>`;
-  }
+### 배너 문구
+- 핵심 혜택/수치 첫 줄, CTA와 짝 맞춤, 긍정 어투
 
-  // ── 완료 메시지 ──
-  if (intent === 'success_message') {
-    return `<span class="badge green">완료 메시지 가이드</span>
-<p style="margin-bottom:10px;">완료 화면은 <strong>안도감과 다음 행동</strong>을 함께 제공해요.</p>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>처리 결과를 명확히 전달 (무엇이 완료됐는지)</li>
-  <li>긍정적·따뜻한 어투 유지</li>
-  <li>다음 행동(CTA) 유도 문구 병행</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">추천 문구</div>
-  <div class="recommend-text">"완료됐어요!"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">차선 (구체형)</div>
-  <div class="alt-text">"이체가 완료됐어요"</div>
-</div>
-<p style="font-size:13px;color:#888;margin-top:8px;">❌ 지양: "처리 완료", "정상 처리되었습니다"</p>`;
-  }
+### 가입/추천 문구
+- 혜택 구체적으로, 즉각성 표현("지금/바로") 활용, 제안형, 2문장 이내
 
-  // ── 버튼 문구 ──
-  if (intent === 'button_copy') {
-    return `<span class="badge blue">버튼(CTA) 문구 가이드</span>
-<p style="margin-bottom:10px;">버튼 문구는 <strong>동사형으로 짧게</strong>, 클릭 후 무슨 일이 일어나는지 명확히 표현해요.</p>
-<h3>✅ 작성 원칙</h3>
-<ul>
-  <li>동사형 종결: "확인하기", "신청하기", "시작하기"</li>
-  <li>6자 이내 권장</li>
-  <li>Primary/Secondary 버튼 역할 명확히 구분</li>
-</ul>
-<div class="recommend-box">
-  <div class="recommend-label">Primary 버튼 추천</div>
-  <div class="recommend-text">"확인하기" / "신청하기" / "시작하기"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">Secondary 버튼 추천</div>
-  <div class="alt-text">"취소" / "나중에" / "돌아가기"</div>
-</div>
-<p style="font-size:13px;color:#888;margin-top:8px;">❌ 지양: "OK", "제출", "클릭"</p>`;
-  }
+### 버튼(CTA)
+- 동사형 6자 이내: "확인하기" "신청하기" "시작하기"
+- 금지: "OK" "제출" "클릭"
 
-  // ── 토스트 메시지 ──
-  if (intent === 'toast_message') {
-    return `<span class="badge blue">토스트 메시지 가이드</span>
-<p style="margin-bottom:10px;">토스트는 <strong>짧고 즉각적인 피드백</strong>. 최대 1문장, 행동 결과 중심으로 써요.</p>
-<div class="recommend-box">
-  <div class="recommend-label">추천 예시</div>
-  <div class="recommend-text">"복사됐어요" / "저장됐어요"</div>
-</div>
-<div class="alt-box">
-  <div class="alt-label">차선</div>
-  <div class="alt-text">"링크가 복사되었습니다"</div>
-</div>
-<p style="font-size:13px;color:#888;margin-top:8px;">❌ 지양: "작업이 완료되었습니다", "성공적으로 처리됨"</p>`;
-  }
+### 완료 메시지
+- 추천: "완료됐어요!" / "이체가 완료됐어요"
+- 지양: "처리 완료" / "정상 처리되었습니다"
 
-  // ── 문구 도움 (상세 유도) ──
-  if (intent === 'writing_help_detail') {
-    return `<span class="badge gray">문구 유형을 조금 더 알려주세요</span>
-<p style="margin-bottom:10px;">아래 중 어떤 문구가 필요하신가요? 상황을 알면 바로 예시를 드릴 수 있어요!</p>
-<ul>
-  <li>📌 <strong>타이틀/제목</strong> → "수신 상품 타이틀 예시 알려줘"</li>
-  <li>📌 <strong>배너 문구</strong> → "iM스마트통장 배너 문구 추천해줘"</li>
-  <li>📌 <strong>가입 추천 문구</strong> → "iM스마트통장 가입 추천 문구 알려줘"</li>
-  <li>📌 <strong>버튼(CTA)</strong> → "가입하기 버튼 문구 뭐가 좋아?"</li>
-  <li>📌 <strong>완료 메시지</strong> → "이체 완료 메시지 문구 추천해줘"</li>
-  <li>📌 <strong>에러 메시지</strong> → "이체 실패 에러 메시지 알려줘"</li>
-</ul>`;
-  }
+### 토스트 메시지
+- 1문장, 행동 결과 중심
+- 추천: "복사됐어요" / "저장됐어요"
 
-  return `<span class="badge gray">조금 더 구체적으로 알려주세요</span>
-<p style="margin-bottom:10px;">질문을 조금 더 구체적으로 입력해주시면 가이드 기준에 맞게 바로 도와드릴게요!</p>
-<ul>
-  <li>"iM스마트통장 가입 추천 문구 알려줘"</li>
-  <li>"비상금전용통장 배너 문구 추천해줘"</li>
-  <li>"수신 상품 상세 타이틀 예시 보여줘"</li>
-  <li>"이체 실패 에러 메시지 뭐가 좋아?"</li>
-  <li>"바텀시트랑 모달 중 어떤 걸 써야 해?"</li>
-</ul>`;
+## 피그마 가이드 문서
+${FIGMA_URL}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[답변 형식]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- 추천 문구 먼저 → 차선 문구 → 간단한 원칙
+- 문구 안에 대치 대상 용어가 있으면 자동 교정 후 제시
+- 타행 사례: 카카오뱅크, 토스, 신한SOL 또는 KB 중 3개
+- 피그마 링크 요청 시 URL 직접 제공
+- 가이드 외 항목은 답변 말미에 반드시 명시
+- 한국어, 친절하고 실무적인 어투`;
+
+const conversationHistory = [];
+
+function scrollToBottom() {
+  setTimeout(() => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    document.getElementById('chatArea').scrollTop = document.getElementById('chatArea').scrollHeight;
+  }, 60);
 }
 
 function addMessage(content, isUser) {
@@ -994,90 +345,90 @@ function addMessage(content, isUser) {
 
   const bubble = document.createElement('div');
   bubble.className = `bubble ${isUser ? 'user' : 'bot'}`;
-
-  if (isUser) {
-    bubble.textContent = content;
-  } else {
-    bubble.innerHTML = content;
-  }
+  if (isUser) { bubble.textContent = content; } else { bubble.innerHTML = content; }
 
   row.appendChild(avatar);
   row.appendChild(bubble);
   area.appendChild(row);
-  setTimeout(() => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    area.scrollTop = area.scrollHeight;
-  }, 50);
-  return row;
+  scrollToBottom();
+  return bubble;
 }
 
 function addTyping() {
   const area = document.getElementById('chatArea');
   const row = document.createElement('div');
-  row.className = 'message-row';
-  row.id = 'typingRow';
-
+  row.className = 'message-row'; row.id = 'typingRow';
   const avatar = document.createElement('div');
-  avatar.className = 'avatar bot';
-  avatar.textContent = 'iM';
-
-  const indicator = document.createElement('div');
-  indicator.className = 'typing-indicator';
-  indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-
-  row.appendChild(avatar);
-  row.appendChild(indicator);
-  area.appendChild(row);
-  area.scrollTop = area.scrollHeight;
-  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  avatar.className = 'avatar bot'; avatar.textContent = 'iM';
+  const ind = document.createElement('div');
+  ind.className = 'typing-indicator';
+  ind.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  row.appendChild(avatar); row.appendChild(ind);
+  area.appendChild(row); scrollToBottom();
 }
 
-function removeTyping() {
-  const t = document.getElementById('typingRow');
-  if (t) t.remove();
+function removeTyping() { const t = document.getElementById('typingRow'); if (t) t.remove(); }
+
+function parseMarkdown(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>[^<]*<\/li>\n?)+/g, m=>`<ul>${m}</ul>`)
+    .replace(/\n\n+/g,'<br><br>')
+    .replace(/\n/g,'<br>')
+    .replace(/(https?:\/\/[^\s&<>"]+)/g,'<a class="figma-link" href="$1" target="_blank">📐 피그마 가이드 바로 가기 →</a>');
 }
 
-function handleSend() {
+async function handleSend() {
   const input = document.getElementById('userInput');
   const text = input.value.trim();
   if (!text) return;
 
-  input.value = '';
-  input.style.height = 'auto';
+  input.value = ''; input.style.height = 'auto';
   document.getElementById('sendBtn').disabled = true;
 
   addMessage(text, true);
+  conversationHistory.push({ role: 'user', content: text });
   addTyping();
 
-  setTimeout(() => {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: conversationHistory
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.content?.map(c => c.text || '').join('') || '답변을 가져오지 못했어요. 다시 시도해주세요.';
+    conversationHistory.push({ role: 'assistant', content: reply });
+
     removeTyping();
-    const intent = analyzeIntent(text);
-    const response = generateResponse(intent, text);
-    addMessage(response, false);
-    document.getElementById('sendBtn').disabled = false;
-    document.getElementById('userInput').focus();
-    setTimeout(() => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }, 100);
-  }, 900 + Math.random() * 400);
-}
+    addMessage(parseMarkdown(reply), false);
 
-function sendQuick(text) {
-  document.getElementById('userInput').value = text;
-  handleSend();
-}
-
-const input = document.getElementById('userInput');
-input.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    handleSend();
+  } catch (e) {
+    removeTyping();
+    addMessage('네트워크 오류가 발생했어요. 잠시 후 다시 시도해주세요.', false);
+    conversationHistory.pop();
   }
-});
-input.addEventListener('input', () => {
-  input.style.height = 'auto';
-  input.style.height = Math.min(input.scrollHeight, 120) + 'px';
-});
+
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('userInput').focus();
+  scrollToBottom();
+}
+
+function sendQuick(text) { document.getElementById('userInput').value = text; handleSend(); }
+
+const inp = document.getElementById('userInput');
+inp.addEventListener('keydown', e => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } });
+inp.addEventListener('input', () => { inp.style.height='auto'; inp.style.height=Math.min(inp.scrollHeight,120)+'px'; });
 </script>
 </body>
 </html>
