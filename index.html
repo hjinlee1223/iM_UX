@@ -18,7 +18,7 @@
   --text-muted: rgba(255,255,255,0.28);
   --radius: 16px; --radius-sm: 10px;
 }
- 
+
 /* 배경 — 그라디언트 + 블러 오브 */
 body {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -40,7 +40,7 @@ body::before {
   pointer-events: none;
 }
 body > * { position: relative; z-index: 1; }
- 
+
 /* 헤더 — Glassmorphism */
 header {
   background: rgba(6,11,24,0.55);
@@ -76,11 +76,11 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
   transition: all 0.2s;
 }
 .header-link:hover { color: var(--text-primary); background: var(--glass-hover); border-color: rgba(255,255,255,0.2); }
- 
+
 /* 메인 */
 .main-container { flex: 1; display: flex; flex-direction: column; max-width: 820px; width: 100%; margin: 0 auto; }
 .chat-area { flex: 1; padding: 20px 16px 0; display: flex; flex-direction: column; gap: 16px; }
- 
+
 /* Glass 카드 공통 */
 .glass-card {
   background: var(--glass);
@@ -91,7 +91,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
   transition: border-color 0.2s, background 0.2s;
 }
 .glass-card:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.18); }
- 
+
 /* 웰컴 */
 .welcome-card { padding: 20px 24px 8px; }
 .welcome-title { font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; }
@@ -109,7 +109,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
   color: white; border-color: var(--im-blue);
   box-shadow: 0 0 14px var(--im-blue-glow);
 }
- 
+
 /* Builder Panel */
 .builder-panel {
   background: rgba(255,255,255,0.04);
@@ -178,7 +178,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
 }
 .builder-submit:hover { box-shadow: 0 4px 28px rgba(74,158,232,0.5); transform: translateY(-1px); }
 .builder-submit:disabled { background: rgba(255,255,255,0.08); color: var(--text-muted); cursor: not-allowed; box-shadow: none; transform: none; }
- 
+
 /* 메시지 */
 .message-row { display: flex; gap: 10px; align-items: flex-start; }
 .message-row.user { flex-direction: row-reverse; }
@@ -198,13 +198,13 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
   border: 1px solid rgba(74,158,232,0.25);
 }
 .bubble.bot { background: transparent; padding: 0; width: 100%; max-width: 100%; }
- 
+
 /* 컨텍스트 레이블 */
 .context-label { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; padding: 0 2px; display: flex; align-items: center; gap: 6px; }
 .context-label .ctx-type { color: var(--im-blue); font-weight: 600; }
 .context-label .ctx-sep { color: rgba(255,255,255,0.15); }
 .context-label .ctx-title { color: var(--text-secondary); }
- 
+
 /* 결과 카드 */
 .tone-card {
   background: rgba(255,255,255,0.05);
@@ -246,14 +246,14 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
 }
 .insight-icon { color: var(--warm); flex-shrink: 0; font-size: 13px; margin-top: 1px; }
 .card-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 0 18px; }
- 
+
 /* 룰 섹션 */
 .rule-section { padding: 12px 18px 14px; }
 .rule-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
 .rule-items { display: flex; flex-direction: column; gap: 4px; }
 .rule-item { display: flex; gap: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
 .rule-key { color: rgba(255,255,255,0.65); font-weight: 600; white-space: nowrap; }
- 
+
 /* 타행 케이스 */
 .bank-section {
   padding: 12px 18px 14px;
@@ -280,7 +280,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
   padding: 3px 8px; cursor: pointer; margin-top: 5px; font-family: inherit; transition: all 0.15s;
 }
 .copy-btn:hover { color: var(--im-blue); border-color: rgba(74,158,232,0.4); background: rgba(74,158,232,0.08); }
- 
+
 /* 가이드 외 알림 */
 .notice-ext {
   background: rgba(255,184,77,0.08);
@@ -288,7 +288,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
   border-radius: var(--radius-sm); padding: 8px 12px; font-size: 11px; color: var(--warm); margin-top: 6px;
   backdrop-filter: blur(8px);
 }
- 
+
 /* 타이핑 */
 .typing-indicator {
   display: flex; align-items: center; gap: 4px; padding: 12px 14px;
@@ -301,7 +301,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
 .dot:nth-child(2) { animation-delay: 0.2s; }
 .dot:nth-child(3) { animation-delay: 0.4s; }
 @keyframes bounce { 0%,60%,100%{transform:translateY(0);background:rgba(255,255,255,0.2);}30%{transform:translateY(-5px);background:var(--im-blue);} }
- 
+
 /* 입력창 */
 .input-area {
   position: sticky; bottom: 0;
@@ -335,7 +335,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
 </style>
 </head>
 <body>
- 
+
 <header>
   <div class="header-left">
     <span style="font-size:18px;font-weight:700;color:white;letter-spacing:-0.5px;font-family:'Pretendard',-apple-system,sans-serif;">iM Bank</span>
@@ -345,17 +345,17 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
     <a class="header-link" href="https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1" target="_blank">UX Writing 가이드</a>
   </div>
 </header>
- 
+
 <div class="main-container">
   <div class="chat-area" id="chatArea">
- 
+
     <div class="welcome-card" id="welcomeCard">
       <div class="welcome-title">iM뱅크 UX Writing Bot 👋</div>
       <div class="welcome-desc">
         UX Writing Assistant로 상황을 선택하면 추천 문구와 적용 근거를 제안해드려요.<br>
         적용된 UX Writing 룰, 이유, 타행 케이스까지 함께 제공합니다.
       </div>
- 
+
       <!-- 모드 토글 — 서비스 설명 바로 아래 -->
       <div style="display:flex;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:4px;margin-bottom:16px;">
         <button id="btnChat" onclick="setMode('chat')"
@@ -367,11 +367,11 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
           UX Writing Assistant
         </button>
       </div>
- 
+
       <div id="quickStartSection" style="display:block;">
         <div style="border-top:1px solid rgba(255,255,255,0.06);margin-bottom:12px;"></div>
         <div style="font-size:11px;color:rgba(255,255,255,0.25);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">빠른 시작</div>
- 
+
         <!-- 1단계: 메인 카테고리 -->
         <div class="quick-tags" id="quickMain">
           <div class="tag" onclick="showSubMenu('toast')">실패 Toast</div>
@@ -380,7 +380,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
           <div class="tag" onclick="showSubMenu('term')">용어 교정</div>
           <div class="tag" onclick="sendQuick('UX Writing 가이드 문서 링크 알려줘')">가이드 링크</div>
         </div>
- 
+
         <!-- 2단계: 서브 메뉴 (선택 후 노출) -->
         <div id="quickSub" style="display:none;margin-top:10px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
@@ -391,21 +391,21 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
         </div>
       </div>
     </div>
- 
+
     <div style="display:none;align-items:center;gap:10px;padding:0 2px;" id="builderDivider">
       <div style="flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,0.08),transparent);"></div>
       <div style="font-size:11px;color:rgba(255,255,255,0.25);font-weight:500;letter-spacing:0.3px;white-space:nowrap;">필수 항목 선택 후 문구 생성</div>
       <div style="flex:1;height:1px;background:linear-gradient(to left,rgba(255,255,255,0.08),transparent);"></div>
     </div>
- 
+
     <div class="builder-panel hidden" id="builderPanel">
- 
+
       <!-- 타이틀만 -->
       <div class="builder-title" style="margin-bottom:16px;">
         UX Writing Assistant
       </div>
       <div class="builder-grid" id="builderFields">
- 
+
         <div class="builder-field">
           <div class="field-label">[1] 상황<span class="required-dot" style="margin-left:5px;"></span></div>
           <div class="chip-group">
@@ -418,7 +418,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
             <button class="chip" data-group="situation" data-val="마케팅">마케팅</button>
           </div>
         </div>
- 
+
         <div class="builder-field">
           <div class="field-label">[2] 사용자 상태<span class="required-dot" style="margin-left:5px;"></span></div>
           <div class="chip-group">
@@ -430,7 +430,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
             <button class="chip" data-group="userstate" data-val="대기">대기</button>
           </div>
         </div>
- 
+
         <div class="builder-field">
           <div class="field-label">[3] 전달 목적<span class="required-dot" style="margin-left:5px;"></span></div>
           <div class="chip-group">
@@ -441,7 +441,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
             <button class="chip" data-group="purpose" data-val="완료">완료</button>
           </div>
         </div>
- 
+
         <div class="builder-field">
           <div class="field-label">[4] 제공 형태<span class="required-dot" style="margin-left:5px;"></span></div>
           <div class="chip-group">
@@ -452,7 +452,7 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
             <button class="chip" data-group="format" data-val="Tool tip">Tool tip</button>
           </div>
         </div>
- 
+
         <div class="builder-field">
           <div class="field-label">[5] 제약 조건 <span class="optional-text">(선택)</span></div>
           <div class="constraint-row">
@@ -461,18 +461,18 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
           </div>
           <input class="constraint-input" id="c-required" placeholder="필수 문구" type="text" style="margin-top:5px;width:100%;">
         </div>
- 
+
         <div class="builder-field">
           <div class="field-label">[6] 내용 설명<span class="required-dot" style="margin-left:5px;"></span></div>
           <textarea class="builder-textarea" id="coreContent" placeholder="예: 잔액 부족, 인증 실패, 약관 동의 필요&#10;자유롭게 입력해주세요"></textarea>
         </div>
- 
+
       </div>
       <button class="builder-submit" id="builderSubmit" onclick="submitBuilder()">✍️ 문구 생성하기</button>
     </div>
- 
+
   </div>
- 
+
   <div class="input-area">
     <div class="input-wrap">
       <textarea id="userInput" placeholder="자유롭게 질문하거나 문구 교정을 요청해보세요..." rows="1"></textarea>
@@ -486,13 +486,13 @@ header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); let
     <div class="hint-text">iM뱅크 UX Writing Guide 기반 · JSON 룰 강제 적용 · 톤별 3가지 문구 제안</div>
   </div>
 </div>
- 
+
 <script>
 const FIGMA_URL = "https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1";
 let currentMode = 'chat';
 const conversationHistory = [];
 const selections = { situation: null, userstate: null, purpose: null, format: null };
- 
+
 // ── 빠른 시작 서브메뉴 데이터 ──
 const SUB_MENUS = {
   toast: {
@@ -545,7 +545,7 @@ const SUB_MENUS = {
     ]
   }
 };
- 
+
 function showSubMenu(key) {
   const data = SUB_MENUS[key];
   if (!data) return;
@@ -557,12 +557,12 @@ function showSubMenu(key) {
   ).join('');
   document.getElementById('quickSub').style.display = 'block';
 }
- 
+
 function hideSubMenu() {
   document.getElementById('quickSub').style.display = 'none';
   document.getElementById('quickMain').style.display = 'flex';
 }
- 
+
 document.querySelectorAll('.chip').forEach(chip => {
   chip.addEventListener('click', () => {
     const g = chip.dataset.group;
@@ -571,7 +571,7 @@ document.querySelectorAll('.chip').forEach(chip => {
     selections[g] = chip.dataset.val;
   });
 });
- 
+
 function setMode(mode) {
   currentMode = mode;
   const btnBuilder = document.getElementById('btnBuilder');
@@ -580,7 +580,7 @@ function setMode(mode) {
   const divider    = document.getElementById('builderDivider');
   const activeStyle   = 'flex:1;padding:8px 0;font-size:13px;font-weight:600;border:none;border-radius:9px;cursor:pointer;font-family:inherit;transition:all 0.2s;background:linear-gradient(135deg,#005BAC,#4A9EE8);color:white;box-shadow:0 0 14px rgba(74,158,232,0.4);';
   const inactiveStyle = 'flex:1;padding:8px 0;font-size:13px;font-weight:500;border:none;border-radius:9px;cursor:pointer;font-family:inherit;transition:all 0.2s;background:transparent;color:rgba(255,255,255,0.35);';
- 
+
   if (mode === 'builder') {
     btnBuilder.style.cssText = activeStyle;
     btnChat.style.cssText    = inactiveStyle;
@@ -601,16 +601,16 @@ function setMode(mode) {
     document.getElementById('userInput').placeholder = '자유롭게 질문하거나 문구 교정을 요청해보세요...';
   }
 }
- 
+
 const SYSTEM_PROMPT = `당신은 iM뱅크 UX Writing 가이드 전문가 봇입니다.
- 
+
 ━━━ [최우선 원칙] ━━━
 모든 응답은 아래 [UX Writing Guide JSON 룰]을 반드시 적용합니다.
 룰을 어기는 문구는 절대 추천하지 않습니다.
 가이드 외 항목은 답변 말미에 반드시 "※ 공식 가이드 외 항목"으로 명시합니다.
- 
+
 ━━━ [UX Writing Guide JSON 룰 — 강제 적용] ━━━
- 
+
 ## 톤·어투 기준
 - 구어체 친근 어투: ~해주세요, ~됐어요, ~해보세요
 - 해결 행동 중심 (원인 나열 지양)
@@ -618,7 +618,7 @@ const SYSTEM_PROMPT = `당신은 iM뱅크 UX Writing 가이드 전문가 봇입�
 - 부정 표현 → 긍정·행동 유도형 전환
 - 피동형 → 능동형 (처리되었습니다 → 처리했어요)
 - 한자어 → 쉬운 한국어
- 
+
 ## 컴포넌트별 문구 기준
 - Toast/Snack-bar: 최대 1문장, 행동 결과 중심
 - Tool tip: 핵심 정보 1줄 이내
@@ -626,7 +626,7 @@ const SYSTEM_PROMPT = `당신은 iM뱅크 UX Writing 가이드 전문가 봇입�
 - 에러 메시지: 최대 20자, 해결 행동 포함
 - Empty State: 2문장 이내, 행동 유도 포함
 - 로딩: 1문장, 안정감 있는 표현
- 
+
 ## 용어 대치 사전 (자동 교체)
 당행/본 은행/대구은행/DGB → iM뱅크
 고객센터/콜센터 → iM뱅크 고객센터(1566-5050/1588-5050)
@@ -639,16 +639,16 @@ const SYSTEM_PROMPT = `당신은 iM뱅크 UX Writing 가이드 전문가 봇입�
 성명/성함 → 이름 / 불이익 → 손해 / 불일치 → 일치하지 않음
 ON/OFF → 켜기/끄기 / CASHBACK → 캐시백
 영어 단독 유지: ARS, ATM, OS, CVC, OTP, FACE ID
- 
+
 ━━━ [UX Writing Assistant 응답 형식 — 반드시 JSON으로만 출력] ━━━
 UX Writing Assistant 입력이 들어오면 반드시 아래 JSON 형식으로만 출력하세요. 다른 텍스트 없이 JSON만 출력합니다.
- 
+
 iM뱅크 JSON 톤 기준을 통합 반영해 단일 최적 추천 문구를 제시합니다:
 - 명확하고 친절한 어투 (에러/오류 상황)
 - 긍정적이고 유도적인 어투 (빈 화면/안내 상황)
 - 부드럽고 안정감을 주는 표현 (로딩/대기 상황)
 → 상황에 맞는 톤을 자동 선택해 하나의 최적 문구로 도출
- 
+
 {
   "context": {
     "type": "제공형태",
@@ -677,21 +677,21 @@ iM뱅크 JSON 톤 기준을 통합 반영해 단일 최적 추천 문구를 제�
   "isGuideExt": false,
   "guideExtNote": ""
 }
- 
+
 ━━━ [자유 질문 응답] ━━━
 - Prompt Builder 외 질문은 자연어로 답변 (JSON 불필요)
 - 단어 하나여도 맥락 파악 후 즉시 답변
 - 용어 교정: 대치어 먼저, 이유 한 줄
 - 피그마 링크 요청: ${FIGMA_URL} 직접 제공
 - 항상 추천/차선 문구 세트 제공`;
- 
+
 function scrollToBottom() {
   setTimeout(() => {
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     document.getElementById('chatArea').scrollTop = document.getElementById('chatArea').scrollHeight;
   }, 60);
 }
- 
+
 function addUserMessage(text) {
   const area = document.getElementById('chatArea');
   const row = document.createElement('div');
@@ -701,7 +701,7 @@ function addUserMessage(text) {
   row.appendChild(av); row.appendChild(bub);
   area.appendChild(row); scrollToBottom();
 }
- 
+
 function addTyping() {
   const area = document.getElementById('chatArea');
   const row = document.createElement('div'); row.className = 'message-row'; row.id = 'typingRow';
@@ -711,7 +711,7 @@ function addTyping() {
   row.appendChild(av); row.appendChild(ind); area.appendChild(row); scrollToBottom();
 }
 function removeTyping() { const t = document.getElementById('typingRow'); if (t) t.remove(); }
- 
+
 // 결과 카드 렌더링 (단일 추천)
 function renderToneCards(data) {
   const area = document.getElementById('chatArea');
@@ -719,12 +719,12 @@ function renderToneCards(data) {
   row.className = 'message-row';
   const av = document.createElement('div'); av.className = 'avatar bot'; av.textContent = 'iM';
   const bub = document.createElement('div'); bub.className = 'bubble bot';
- 
+
   const r = data.recommend;
   const a = data.alt;
   const copyText = r.copies.filter(c => c).join('\n');
   const altCopyText = a.copies.filter(c => c).join('\n');
- 
+
   // 컨텍스트 레이블
   bub.innerHTML = `
     <div class="context-label">
@@ -734,7 +734,7 @@ function renderToneCards(data) {
       <span class="ctx-sep">—</span>
       <span style="color:#4A5068;">UX Writing Guide 적용</span>
     </div>`;
- 
+
   // ── 추천 문구 카드 ──
   const recCard = document.createElement('div');
   recCard.className = 'tone-card';
@@ -762,7 +762,7 @@ function renderToneCards(data) {
     </div>` : ''}
   `;
   bub.appendChild(recCard);
- 
+
   // ── 차선 문구 카드 ──
   if (a && a.copies && a.copies.length) {
     const altCard = document.createElement('div');
@@ -782,7 +782,7 @@ function renderToneCards(data) {
     `;
     bub.appendChild(altCard);
   }
- 
+
   // ── 타행 케이스 ──
   if (data.banks && data.banks.length) {
     const bankCard = document.createElement('div');
@@ -802,7 +802,7 @@ function renderToneCards(data) {
     `;
     bub.appendChild(bankCard);
   }
- 
+
   // ── 가이드 외 알림 ──
   if (data.isGuideExt && data.guideExtNote) {
     const ext = document.createElement('div');
@@ -811,18 +811,18 @@ function renderToneCards(data) {
     ext.textContent = `※ ${data.guideExtNote}`;
     bub.appendChild(ext);
   }
- 
+
   row.appendChild(av); row.appendChild(bub);
   area.appendChild(row); scrollToBottom();
 }
- 
+
 // 일반 텍스트 응답 렌더링
 function renderTextResponse(text) {
   const area = document.getElementById('chatArea');
   const row = document.createElement('div'); row.className = 'message-row';
   const av = document.createElement('div'); av.className = 'avatar bot'; av.textContent = 'iM';
   const bub = document.createElement('div'); bub.className = 'bubble bot';
- 
+
   // 마크다운 → HTML 변환
   const html = text
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -847,19 +847,19 @@ function renderTextResponse(text) {
     .replace(/\n/g,'<br>')
     // URL → 링크
     .replace(/(https?:\/\/[^\s&lt;&gt;"]+)/g,'<a style="color:var(--im-blue);font-size:13px;font-weight:500;" href="$1" target="_blank">📐 피그마 가이드 바로 가기 →</a>');
- 
+
   bub.innerHTML = `<div style="padding:14px 16px;background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:14px;border-top-left-radius:4px;font-size:13px;line-height:1.75;color:rgba(255,255,255,0.78);">${html}</div>`;
   row.appendChild(av); row.appendChild(bub);
   area.appendChild(row); scrollToBottom();
 }
- 
+
 function copyText(text, btn) {
   navigator.clipboard.writeText(text).then(() => {
     btn.textContent = '✅ 복사됨';
     setTimeout(() => { btn.innerHTML = '📋 복사'; }, 1500);
   });
 }
- 
+
 async function callAPI(userMessage, isBuilder) {
   conversationHistory.push({ role: 'user', content: userMessage });
   addTyping();
@@ -885,7 +885,7 @@ async function callAPI(userMessage, isBuilder) {
     const reply = data.content?.map(c => c.text || '').join('') || '답변을 가져오지 못했어요.';
     conversationHistory.push({ role: 'assistant', content: reply });
     removeTyping();
- 
+
     if (isBuilder) {
       // JSON 파싱 시도
       try {
@@ -909,14 +909,14 @@ async function callAPI(userMessage, isBuilder) {
   document.getElementById('userInput').focus();
   scrollToBottom();
 }
- 
+
 function submitBuilder() {
   const { situation, userstate, purpose, format } = selections;
   const core = document.getElementById('coreContent').value.trim();
   const charCount = document.getElementById('c-charcount').value.trim();
   const keyword = document.getElementById('c-keyword').value.trim();
   const required = document.getElementById('c-required').value.trim();
- 
+
   const missing = [];
   if (!situation) missing.push('[1] 상황');
   if (!userstate) missing.push('[2] 사용자 상태');
@@ -924,18 +924,18 @@ function submitBuilder() {
   if (!format) missing.push('[4] 제공 형태');
   if (!core) missing.push('[6] 핵심 내용');
   if (missing.length) { alert(`다음 항목을 입력해주세요:\n${missing.join(', ')}`); return; }
- 
+
   let prompt = `[Prompt Builder]\n[1]상황:${situation} [2]사용자상태:${userstate} [3]목적:${purpose} [4]형태:${format}`;
   if (charCount||keyword||required) prompt += ` [5]제약:${[charCount,keyword,required].filter(Boolean).join('/')}`;
   prompt += ` [6]핵심내용:${core}`;
   prompt += `\n\n위 조건으로 iM뱅크 UX Writing Guide 룰을 적용해 톤별 강화 문구를 JSON 형식으로 생성해주세요.`;
- 
+
   const summary = `${format} · ${situation} · ${userstate} · "${core}"`;
   addUserMessage(summary);
   document.getElementById('builderSubmit').disabled = true;
   callAPI(prompt, true);
 }
- 
+
 function handleSend() {
   const input = document.getElementById('userInput');
   const text = input.value.trim(); if (!text) return;
@@ -944,7 +944,7 @@ function handleSend() {
   addUserMessage(text);
   callAPI(text, false);
 }
- 
+
 function sendQuick(text) {
   hideSubMenu();
   // value 먼저 세팅
@@ -962,7 +962,7 @@ function sendQuick(text) {
   addUserMessage(trimmed);
   callAPI(trimmed, false);
 }
- 
+
 const inp = document.getElementById('userInput');
 inp.addEventListener('keydown', e => { if (e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();} });
 inp.addEventListener('input', () => { inp.style.height='auto'; inp.style.height=Math.min(inp.scrollHeight,100)+'px'; });
