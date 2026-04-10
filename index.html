@@ -5,430 +5,967 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>iM뱅크 UX Writing Bot</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --im-blue: #005BAC; --im-blue-light: #E6F0F9;
-    --gray-50: #F8F9FA; --gray-100: #F1F3F5; --gray-200: #E9ECEF;
-    --gray-300: #DEE2E6; --gray-500: #ADB5BD; --gray-700: #495057; --gray-900: #212529;
-    --border: 1px solid #E2E8F0; --radius: 12px; --radius-sm: 8px;
-    --shadow: 0 2px 12px rgba(0,91,172,0.08);
-  }
-  body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F4F7FB; color: var(--gray-900); min-height: 100vh; display: flex; flex-direction: column; }
-  header { background: var(--im-blue); color: white; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,91,172,0.2); }
-  .header-left { display: flex; align-items: center; gap: 12px; }
-  .logo-badge { background: white; color: var(--im-blue); font-weight: 700; font-size: 13px; padding: 4px 10px; border-radius: 6px; }
-  header h1 { font-size: 16px; font-weight: 500; opacity: 0.95; }
-  .header-link { background: rgba(255,255,255,0.15); color: white; text-decoration: none; font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); white-space: nowrap; }
-  .header-link:hover { background: rgba(255,255,255,0.25); }
-  .main-container { flex: 1; display: flex; flex-direction: column; max-width: 760px; width: 100%; margin: 0 auto; }
-  .chat-area { flex: 1; padding: 24px 16px 0; display: flex; flex-direction: column; gap: 16px; min-height: calc(100vh - 56px - 130px); }
-  .welcome-card { background: white; border: var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
-  .welcome-title { font-size: 20px; font-weight: 700; color: var(--im-blue); margin-bottom: 6px; }
-  .welcome-desc { font-size: 14px; color: var(--gray-700); line-height: 1.6; margin-bottom: 18px; }
-  .quick-tags-label { font-size: 12px; color: var(--gray-500); margin-bottom: 8px; font-weight: 500; }
-  .quick-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-  .tag { background: var(--im-blue-light); color: var(--im-blue); font-size: 13px; padding: 6px 14px; border-radius: 20px; cursor: pointer; border: 1px solid #C8DCF0; transition: all 0.15s; font-weight: 500; }
-  .tag:hover { background: var(--im-blue); color: white; border-color: var(--im-blue); }
-  .message-row { display: flex; gap: 10px; align-items: flex-start; }
-  .message-row.user { flex-direction: row-reverse; }
-  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-  .avatar.bot { background: var(--im-blue); color: white; font-size: 11px; }
-  .avatar.user-av { background: var(--gray-200); color: var(--gray-700); font-size: 12px; }
-  .bubble { max-width: 86%; padding: 14px 16px; border-radius: var(--radius); font-size: 14px; line-height: 1.7; }
-  .bubble.bot { background: white; border: var(--border); box-shadow: var(--shadow); color: var(--gray-900); border-top-left-radius: 4px; }
-  .bubble.user { background: var(--im-blue); color: white; border-top-right-radius: 4px; }
-  .bubble.bot strong { font-weight: 600; color: var(--im-blue); }
-  .bubble.bot h3 { font-size: 13px; font-weight: 700; color: var(--im-blue); margin: 14px 0 6px; }
-  .bubble.bot ul { padding-left: 18px; margin: 6px 0; }
-  .bubble.bot ul li { margin-bottom: 4px; }
-  .bubble.bot p { margin-bottom: 8px; }
-  .bubble.bot p:last-child { margin-bottom: 0; }
-  .recommend-box { background: var(--im-blue-light); border: 1px solid #C8DCF0; border-radius: var(--radius-sm); padding: 12px 14px; margin: 10px 0; }
-  .recommend-label { font-size: 11px; color: var(--im-blue); font-weight: 700; margin-bottom: 4px; }
-  .recommend-text { font-size: 15px; font-weight: 700; color: var(--gray-900); }
-  .alt-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 10px 14px; margin-top: 6px; }
-  .alt-label { font-size: 11px; color: var(--gray-500); font-weight: 700; margin-bottom: 3px; }
-  .alt-text { font-size: 14px; color: var(--gray-700); font-weight: 500; }
-  .case-section { margin-top: 12px; border-top: 1px solid var(--gray-200); padding-top: 12px; }
-  .case-section-title { font-size: 12px; color: var(--gray-500); font-weight: 600; margin-bottom: 8px; }
-  .case-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; padding: 8px 10px; background: var(--gray-50); border-radius: var(--radius-sm); border: 1px solid var(--gray-200); }
-  .case-bank { font-size: 11px; font-weight: 700; color: white; background: var(--gray-500); padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
-  .case-content { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
-  a.figma-link { display: inline-flex; align-items: center; gap: 6px; color: var(--im-blue); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 14px; background: var(--im-blue-light); border-radius: var(--radius-sm); border: 1px solid #C8DCF0; margin-top: 10px; }
-  a.figma-link:hover { background: var(--im-blue); color: white; }
-  .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 14px 16px; background: white; border: var(--border); border-radius: var(--radius); border-top-left-radius: 4px; width: fit-content; box-shadow: var(--shadow); }
-  .dot { width: 7px; height: 7px; background: var(--gray-300); border-radius: 50%; animation: bounce 1.2s infinite; }
-  .dot:nth-child(2) { animation-delay: 0.2s; }
-  .dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce { 0%,60%,100% { transform:translateY(0); background:var(--gray-300); } 30% { transform:translateY(-6px); background:var(--im-blue); } }
-  .input-area { position: sticky; bottom: 0; background: #F4F7FB; padding: 12px 16px 20px; border-top: var(--border); }
-  .input-wrap { display: flex; gap: 10px; background: white; border: 1.5px solid var(--gray-200); border-radius: var(--radius); padding: 10px 14px; transition: border-color 0.2s; box-shadow: var(--shadow); }
-  .input-wrap:focus-within { border-color: var(--im-blue); box-shadow: 0 0 0 3px rgba(0,91,172,0.1); }
-  #userInput { flex: 1; border: none; outline: none; font-size: 14px; color: var(--gray-900); background: transparent; font-family: inherit; resize: none; min-height: 20px; max-height: 120px; line-height: 1.5; }
-  #userInput::placeholder { color: var(--gray-500); }
-  .send-btn { background: var(--im-blue); color: white; border: none; border-radius: var(--radius-sm); width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; align-self: flex-end; transition: background 0.15s; }
-  .send-btn:hover { background: #004A91; }
-  .send-btn:disabled { background: var(--gray-300); cursor: not-allowed; }
-  .send-btn svg { width: 16px; height: 16px; }
-  .hint-text { text-align: center; font-size: 11px; color: var(--gray-500); margin-top: 8px; }
-  @media (max-width: 480px) { .bubble { max-width: 92%; } header h1 { font-size: 14px; } .header-link { display: none; } }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --im-blue: #4A9EE8; --im-blue-dark: #2E80CC; --im-blue-glow: rgba(74,158,232,0.35);
+  --trust: #00E5C2; --warm: #FFB84D; --clear: #A78BFF;
+  --glass: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.12);
+  --glass-hover: rgba(255,255,255,0.10);
+  --glass-strong: rgba(255,255,255,0.09);
+  --text-primary: rgba(255,255,255,0.92);
+  --text-secondary: rgba(255,255,255,0.55);
+  --text-muted: rgba(255,255,255,0.28);
+  --radius: 16px; --radius-sm: 10px;
+}
+ 
+/* 배경 — 그라디언트 + 블러 오브 */
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #060B18;
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(0,91,172,0.28) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 70%, rgba(74,158,232,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 35% at 60% 10%, rgba(123,97,255,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+body > * { position: relative; z-index: 1; }
+ 
+/* 헤더 — Glassmorphism */
+header {
+  background: rgba(6,11,24,0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 0 24px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+header h1 { font-size: 14px; font-weight: 400; color: var(--text-secondary); letter-spacing: 0.2px; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.mode-toggle {
+  display: flex;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px; padding: 3px; gap: 2px;
+  border: 1px solid var(--glass-border);
+}
+.mode-btn { font-size: 12px; padding: 4px 14px; border-radius: 16px; border: none; cursor: pointer; font-family: inherit; transition: all 0.2s; color: var(--text-muted); background: transparent; }
+.mode-btn.active {
+  background: linear-gradient(135deg, #005BAC, var(--im-blue));
+  color: white; font-weight: 600;
+  box-shadow: 0 0 12px var(--im-blue-glow);
+}
+.header-link {
+  color: var(--text-secondary); text-decoration: none; font-size: 12px;
+  padding: 5px 12px; border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  transition: all 0.2s;
+}
+.header-link:hover { color: var(--text-primary); background: var(--glass-hover); border-color: rgba(255,255,255,0.2); }
+ 
+/* 메인 */
+.main-container { flex: 1; display: flex; flex-direction: column; max-width: 820px; width: 100%; margin: 0 auto; }
+.chat-area { flex: 1; padding: 20px 16px 0; display: flex; flex-direction: column; gap: 16px; }
+ 
+/* Glass 카드 공통 */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  transition: border-color 0.2s, background 0.2s;
+}
+.glass-card:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.18); }
+ 
+/* 웰컴 */
+.welcome-card { padding: 20px 24px 8px; }
+.welcome-title { font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; }
+.welcome-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; }
+.quick-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.tag {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  color: var(--text-secondary); font-size: 12px; padding: 5px 13px;
+  border-radius: 20px; cursor: pointer;
+  border: 1px solid var(--glass-border); font-weight: 500; transition: all 0.2s;
+}
+.tag:hover {
+  background: linear-gradient(135deg, rgba(0,91,172,0.5), rgba(74,158,232,0.4));
+  color: white; border-color: var(--im-blue);
+  box-shadow: 0 0 14px var(--im-blue-glow);
+}
+ 
+/* Builder Panel */
+.builder-panel {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid rgba(74,158,232,0.5);
+  border-radius: var(--radius); padding: 20px 24px;
+  box-shadow: 0 0 30px rgba(74,158,232,0.06), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.builder-panel.visible { display: block; }
+.builder-panel.hidden { display: none; }
+.builder-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.builder-title span {
+  font-size: 11px; font-weight: 400; color: var(--text-muted);
+  background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 10px;
+  border: 1px solid var(--glass-border);
+}
+.builder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 24px; margin-bottom: 20px; align-items: start; }
+@media (max-width: 600px) { .builder-grid { grid-template-columns: 1fr; } }
+.builder-field { display: flex; flex-direction: column; gap: 9px; }
+.field-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 5px; }
+.required-dot { width: 4px; height: 4px; background: #FF6B6B; border-radius: 50%; display: inline-block; box-shadow: 0 0 5px rgba(255,107,107,0.6); }
+.optional-text { font-size: 10px; color: var(--text-muted); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.chip-group { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip {
+  font-size: 12px; padding: 4px 11px; border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary); cursor: pointer; transition: all 0.15s; font-family: inherit;
+}
+.chip:hover { border-color: rgba(74,158,232,0.5); color: #9BC4E8; background: rgba(74,158,232,0.08); }
+.chip.selected {
+  background: linear-gradient(135deg, rgba(0,91,172,0.6), rgba(74,158,232,0.5));
+  color: white; border-color: var(--im-blue);
+  box-shadow: 0 0 10px var(--im-blue-glow);
+}
+.builder-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border); border-radius: var(--radius-sm);
+  padding: 10px 12px; font-size: 13px; font-family: inherit;
+  color: var(--text-primary); resize: none; min-height: 64px; outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s; line-height: 1.5;
+  backdrop-filter: blur(10px);
+}
+.builder-textarea:focus { border-color: rgba(74,158,232,0.6); box-shadow: 0 0 0 2px rgba(74,158,232,0.15); }
+.builder-textarea::placeholder { color: var(--text-muted); }
+.constraint-row { display: flex; gap: 7px; }
+.constraint-input {
+  flex: 1; background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border); border-radius: var(--radius-sm);
+  padding: 7px 10px; font-size: 12px; font-family: inherit;
+  color: var(--text-primary); outline: none; backdrop-filter: blur(10px);
+  transition: border-color 0.15s;
+}
+.constraint-input:focus { border-color: rgba(74,158,232,0.6); }
+.constraint-input::placeholder { color: var(--text-muted); }
+.builder-submit {
+  width: 100%;
+  background: linear-gradient(135deg, #005BAC, var(--im-blue));
+  color: white; border: none; border-radius: var(--radius-sm);
+  padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: inherit; transition: all 0.2s; margin-top: 4px;
+  box-shadow: 0 4px 20px rgba(0,91,172,0.35);
+}
+.builder-submit:hover { box-shadow: 0 4px 28px rgba(74,158,232,0.5); transform: translateY(-1px); }
+.builder-submit:disabled { background: rgba(255,255,255,0.08); color: var(--text-muted); cursor: not-allowed; box-shadow: none; transform: none; }
+ 
+/* 메시지 */
+.message-row { display: flex; gap: 10px; align-items: flex-start; }
+.message-row.user { flex-direction: row-reverse; }
+.avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.avatar.bot {
+  background: linear-gradient(135deg, #005BAC, var(--im-blue));
+  color: white;
+  box-shadow: 0 0 10px var(--im-blue-glow);
+}
+.avatar.user-av { background: rgba(255,255,255,0.08); color: var(--text-secondary); font-size: 11px; border: 1px solid var(--glass-border); }
+.bubble { max-width: 90%; border-radius: var(--radius); font-size: 13px; line-height: 1.7; }
+.bubble.user {
+  background: linear-gradient(135deg, rgba(0,91,172,0.35), rgba(74,158,232,0.25));
+  backdrop-filter: blur(16px);
+  color: rgba(255,255,255,0.88); padding: 10px 14px;
+  border-top-right-radius: 4px; font-size: 12px;
+  border: 1px solid rgba(74,158,232,0.25);
+}
+.bubble.bot { background: transparent; padding: 0; width: 100%; max-width: 100%; }
+ 
+/* 컨텍스트 레이블 */
+.context-label { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; padding: 0 2px; display: flex; align-items: center; gap: 6px; }
+.context-label .ctx-type { color: var(--im-blue); font-weight: 600; }
+.context-label .ctx-sep { color: rgba(255,255,255,0.15); }
+.context-label .ctx-title { color: var(--text-secondary); }
+ 
+/* 결과 카드 */
+.tone-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+}
+.tone-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.18); }
+.tone-card-header { padding: 14px 18px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+.card-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); color: var(--text-secondary);
+  font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  border: 1px solid var(--glass-border);
+}
+.tone-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; }
+.tone-badge.trust { background: rgba(0,229,194,0.12); color: var(--trust); border: 1px solid rgba(0,229,194,0.25); box-shadow: 0 0 8px rgba(0,229,194,0.15); }
+.tone-badge.warm  { background: rgba(255,184,77,0.12); color: var(--warm); border: 1px solid rgba(255,184,77,0.25); box-shadow: 0 0 8px rgba(255,184,77,0.12); }
+.tone-badge.clear { background: rgba(167,139,255,0.12); color: var(--clear); border: 1px solid rgba(167,139,255,0.25); box-shadow: 0 0 8px rgba(167,139,255,0.12); }
+.tone-badge::before { content: '●'; font-size: 7px; }
+.card-body { padding: 10px 18px 14px; }
+.card-copy { font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.4; margin-bottom: 10px; padding: 2px 0; }
+.card-copy .copy-line { display: block; }
+.card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.meta-badge { font-size: 11px; padding: 3px 9px; border-radius: 10px; font-weight: 500; }
+.meta-badge.trust { background: rgba(0,229,194,0.1); color: var(--trust); border: 1px solid rgba(0,229,194,0.2); }
+.meta-badge.warm  { background: rgba(255,184,77,0.1); color: var(--warm); border: 1px solid rgba(255,184,77,0.2); }
+.meta-badge.clear { background: rgba(167,139,255,0.1); color: var(--clear); border: 1px solid rgba(167,139,255,0.2); }
+.char-count { font-size: 11px; color: var(--text-muted); background: rgba(255,255,255,0.06); padding: 3px 9px; border-radius: 10px; font-weight: 600; border: 1px solid var(--glass-border); }
+.card-insight {
+  display: flex; align-items: flex-start; gap: 6px;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm); padding: 8px 12px;
+  font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+}
+.insight-icon { color: var(--warm); flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+.card-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 0 18px; }
+ 
+/* 룰 섹션 */
+.rule-section { padding: 12px 18px 14px; }
+.rule-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
+.rule-items { display: flex; flex-direction: column; gap: 4px; }
+.rule-item { display: flex; gap: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+.rule-key { color: rgba(255,255,255,0.65); font-weight: 600; white-space: nowrap; }
+ 
+/* 타행 케이스 */
+.bank-section {
+  padding: 12px 18px 14px;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+}
+.bank-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.bank-rows { display: flex; flex-direction: column; gap: 6px; }
+.bank-row { display: flex; gap: 8px; align-items: flex-start; }
+.bank-name { font-size: 10px; font-weight: 700; color: white; padding: 2px 7px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+.b-toss    { background: #0064FF; }
+.b-kakao   { background: #FEE500; color: #3C1E1E; }
+.b-shinhan { background: #0046A0; }
+.b-kb      { background: #FFBE00; color: #3C1E1E; }
+.b-woori   { background: #006AB4; }
+.b-hana    { background: #009B6D; }
+.bank-content { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+.copy-btn {
+  display: inline-flex; align-items: center; gap: 4px; font-size: 10px;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--glass-border); border-radius: 4px;
+  padding: 3px 8px; cursor: pointer; margin-top: 5px; font-family: inherit; transition: all 0.15s;
+}
+.copy-btn:hover { color: var(--im-blue); border-color: rgba(74,158,232,0.4); background: rgba(74,158,232,0.08); }
+ 
+/* 가이드 외 알림 */
+.notice-ext {
+  background: rgba(255,184,77,0.08);
+  border: 1px solid rgba(255,184,77,0.2);
+  border-radius: var(--radius-sm); padding: 8px 12px; font-size: 11px; color: var(--warm); margin-top: 6px;
+  backdrop-filter: blur(8px);
+}
+ 
+/* 타이핑 */
+.typing-indicator {
+  display: flex; align-items: center; gap: 4px; padding: 12px 14px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius); border-top-left-radius: 4px; width: fit-content;
+}
+.dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; animation: bounce 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,60%,100%{transform:translateY(0);background:rgba(255,255,255,0.2);}30%{transform:translateY(-5px);background:var(--im-blue);} }
+ 
+/* 입력창 */
+.input-area {
+  position: sticky; bottom: 0;
+  background: rgba(6,11,24,0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 10px 16px 18px;
+  border-top: 1px solid var(--glass-border);
+}
+.input-wrap {
+  display: flex; gap: 8px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius); padding: 9px 12px; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-wrap:focus-within { border-color: rgba(74,158,232,0.5); box-shadow: 0 0 0 2px rgba(74,158,232,0.12); }
+#userInput { flex:1; border:none; outline:none; font-size:13px; color:var(--text-primary); background:transparent; font-family:inherit; resize:none; min-height:20px; max-height:100px; line-height:1.5; }
+#userInput::placeholder { color: var(--text-muted); }
+.send-btn {
+  background: linear-gradient(135deg, #005BAC, var(--im-blue));
+  color:white; border:none; border-radius:var(--radius-sm);
+  width:34px; height:34px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; align-self:flex-end; transition: all 0.2s;
+  box-shadow: 0 2px 12px var(--im-blue-glow);
+}
+.send-btn:hover { box-shadow: 0 4px 20px rgba(74,158,232,0.5); transform: translateY(-1px); }
+.send-btn:disabled { background: rgba(255,255,255,0.08); box-shadow: none; transform: none; cursor: not-allowed; }
+.send-btn svg { width:15px; height:15px; }
+.hint-text { text-align:center; font-size:11px; color:var(--text-muted); margin-top:6px; }
 </style>
 </head>
 <body>
+ 
 <header>
   <div class="header-left">
-    <div class="logo-badge">iM뱅크</div>
-    <h1>UX Writing Bot</h1>
+    <span style="font-size:18px;font-weight:700;color:white;letter-spacing:-0.5px;font-family:'Pretendard',-apple-system,sans-serif;">iM Bank</span>
+    <h1 style="display:none;">UX Writing Bot</h1>
   </div>
-  <a class="header-link" href="https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1" target="_blank">📐 가이드 문서 열기</a>
+  <div class="header-right">
+    <a class="header-link" href="https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1" target="_blank">UX Writing 가이드</a>
+  </div>
 </header>
-
+ 
 <div class="main-container">
   <div class="chat-area" id="chatArea">
-    <div class="welcome-card">
-      <div class="welcome-title">안녕하세요! iM뱅크 UX Writing Bot이에요 👋</div>
-      <div class="welcome-desc">iM뱅크 UX Writing 가이드 기준으로 UI 문구, 컴포넌트 추천, 카피를 도와드립니다.<br>단어 하나만 입력해도 맥락을 파악해서 바로 답변드려요.</div>
-      <div class="quick-tags-label">빠른 시작</div>
-      <div class="quick-tags">
-        <div class="tag" onclick="sendQuick('에러 메시지')">에러 메시지</div>
-        <div class="tag" onclick="sendQuick('바텀시트 vs 모달')">바텀시트 vs 모달</div>
-        <div class="tag" onclick="sendQuick('empty state')">Empty State</div>
-        <div class="tag" onclick="sendQuick('로딩')">로딩 문구</div>
-        <div class="tag" onclick="sendQuick('iM스마트통장 배너 문구')">배너 문구</div>
-        <div class="tag" onclick="sendQuick('가이드 문서 링크')">가이드 문서</div>
+ 
+    <div class="welcome-card" id="welcomeCard">
+      <div class="welcome-title">iM뱅크 UX Writing Bot 👋</div>
+      <div class="welcome-desc">
+        UX Writing Assistant로 상황을 선택하면 추천 문구와 적용 근거를 제안해드려요.<br>
+        적용된 UX Writing 룰, 이유, 타행 케이스까지 함께 제공합니다.
+      </div>
+ 
+      <!-- 모드 토글 — 서비스 설명 바로 아래 -->
+      <div style="display:flex;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:4px;margin-bottom:16px;">
+        <button id="btnChat" onclick="setMode('chat')"
+          style="flex:1;padding:8px 0;font-size:13px;font-weight:600;border:none;border-radius:9px;cursor:pointer;font-family:inherit;transition:all 0.2s;background:linear-gradient(135deg,#005BAC,var(--im-blue));color:white;box-shadow:0 0 12px var(--im-blue-glow);">
+          자유 질문
+        </button>
+        <button id="btnBuilder" onclick="setMode('builder')"
+          style="flex:1;padding:8px 0;font-size:13px;font-weight:500;border:none;border-radius:9px;cursor:pointer;font-family:inherit;transition:all 0.2s;background:transparent;color:var(--text-muted);">
+          UX Writing Assistant
+        </button>
+      </div>
+ 
+      <div id="quickStartSection" style="display:block;">
+        <div style="border-top:1px solid rgba(255,255,255,0.06);margin-bottom:12px;"></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.25);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">빠른 시작</div>
+ 
+        <!-- 1단계: 메인 카테고리 -->
+        <div class="quick-tags" id="quickMain">
+          <div class="tag" onclick="showSubMenu('toast')">실패 Toast</div>
+          <div class="tag" onclick="showSubMenu('error')">오류 메시지</div>
+          <div class="tag" onclick="showSubMenu('popup')">서비스 안내 팝업</div>
+          <div class="tag" onclick="showSubMenu('term')">용어 교정</div>
+          <div class="tag" onclick="sendQuick('UX Writing 가이드 문서 링크 알려줘')">가이드 링크</div>
+        </div>
+ 
+        <!-- 2단계: 서브 메뉴 (선택 후 노출) -->
+        <div id="quickSub" style="display:none;margin-top:10px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <button onclick="hideSubMenu()" style="background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);color:rgba(255,255,255,0.45);font-size:11px;padding:3px 9px;border-radius:10px;cursor:pointer;font-family:inherit;">← 뒤로</button>
+            <span id="quickSubLabel" style="font-size:11px;color:rgba(255,255,255,0.35);font-weight:600;text-transform:uppercase;letter-spacing:0.4px;"></span>
+          </div>
+          <div class="quick-tags" id="quickSubTags"></div>
+        </div>
       </div>
     </div>
+ 
+    <div style="display:none;align-items:center;gap:10px;padding:0 2px;" id="builderDivider">
+      <div style="flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,0.08),transparent);"></div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.25);font-weight:500;letter-spacing:0.3px;white-space:nowrap;">필수 항목 선택 후 문구 생성</div>
+      <div style="flex:1;height:1px;background:linear-gradient(to left,rgba(255,255,255,0.08),transparent);"></div>
+    </div>
+ 
+    <div class="builder-panel hidden" id="builderPanel">
+ 
+      <!-- 타이틀만 -->
+      <div class="builder-title" style="margin-bottom:16px;">
+        UX Writing Assistant
+      </div>
+      <div class="builder-grid" id="builderFields">
+ 
+        <div class="builder-field">
+          <div class="field-label">[1] 상황<span class="required-dot" style="margin-left:5px;"></span></div>
+          <div class="chip-group">
+            <button class="chip" data-group="situation" data-val="송금">송금</button>
+            <button class="chip" data-group="situation" data-val="로그인">로그인</button>
+            <button class="chip" data-group="situation" data-val="인증">인증</button>
+            <button class="chip" data-group="situation" data-val="상품가입">상품가입</button>
+            <button class="chip" data-group="situation" data-val="오류">오류</button>
+            <button class="chip" data-group="situation" data-val="안내">안내</button>
+            <button class="chip" data-group="situation" data-val="마케팅">마케팅</button>
+          </div>
+        </div>
+ 
+        <div class="builder-field">
+          <div class="field-label">[2] 사용자 상태<span class="required-dot" style="margin-left:5px;"></span></div>
+          <div class="chip-group">
+            <button class="chip" data-group="userstate" data-val="정상 진행">정상 진행</button>
+            <button class="chip" data-group="userstate" data-val="실패">실패</button>
+            <button class="chip" data-group="userstate" data-val="처음">처음</button>
+            <button class="chip" data-group="userstate" data-val="재시도">재시도</button>
+            <button class="chip" data-group="userstate" data-val="긴급">긴급</button>
+            <button class="chip" data-group="userstate" data-val="대기">대기</button>
+          </div>
+        </div>
+ 
+        <div class="builder-field">
+          <div class="field-label">[3] 전달 목적<span class="required-dot" style="margin-left:5px;"></span></div>
+          <div class="chip-group">
+            <button class="chip" data-group="purpose" data-val="안내">안내</button>
+            <button class="chip" data-group="purpose" data-val="경고">경고</button>
+            <button class="chip" data-group="purpose" data-val="확인">확인</button>
+            <button class="chip" data-group="purpose" data-val="유도">유도</button>
+            <button class="chip" data-group="purpose" data-val="완료">완료</button>
+          </div>
+        </div>
+ 
+        <div class="builder-field">
+          <div class="field-label">[4] 제공 형태<span class="required-dot" style="margin-left:5px;"></span></div>
+          <div class="chip-group">
+            <button class="chip" data-group="format" data-val="Ground pop-up">Ground pop-up</button>
+            <button class="chip" data-group="format" data-val="Toast">Toast</button>
+            <button class="chip" data-group="format" data-val="Snack-bar">Snack-bar</button>
+            <button class="chip" data-group="format" data-val="System pop-up">System pop-up</button>
+            <button class="chip" data-group="format" data-val="Tool tip">Tool tip</button>
+          </div>
+        </div>
+ 
+        <div class="builder-field">
+          <div class="field-label">[5] 제약 조건 <span class="optional-text">(선택)</span></div>
+          <div class="constraint-row">
+            <input class="constraint-input" id="c-charcount" placeholder="글자수 제한" type="text">
+            <input class="constraint-input" id="c-keyword" placeholder="포함 키워드" type="text">
+          </div>
+          <input class="constraint-input" id="c-required" placeholder="필수 문구" type="text" style="margin-top:5px;width:100%;">
+        </div>
+ 
+        <div class="builder-field">
+          <div class="field-label">[6] 내용 설명<span class="required-dot" style="margin-left:5px;"></span></div>
+          <textarea class="builder-textarea" id="coreContent" placeholder="예: 잔액 부족, 인증 실패, 약관 동의 필요&#10;자유롭게 입력해주세요"></textarea>
+        </div>
+ 
+      </div>
+      <button class="builder-submit" id="builderSubmit" onclick="submitBuilder()">✍️ 문구 생성하기</button>
+    </div>
+ 
   </div>
-
+ 
   <div class="input-area">
     <div class="input-wrap">
-      <textarea id="userInput" placeholder="단어만 입력해도 돼요. 예: 에러, 배너, 로딩, 바텀시트..." rows="1"></textarea>
+      <textarea id="userInput" placeholder="자유롭게 질문하거나 문구 교정을 요청해보세요..." rows="1"></textarea>
       <button class="send-btn" id="sendBtn" onclick="handleSend()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
       </button>
     </div>
-    <div class="hint-text">iM뱅크 UX 가이드 기반 · 가이드에 없는 내용은 없다고 안내드려요</div>
+    <div class="hint-text">iM뱅크 UX Writing Guide 기반 · JSON 룰 강제 적용 · 톤별 3가지 문구 제안</div>
   </div>
 </div>
-
+ 
 <script>
 const FIGMA_URL = "https://www.figma.com/design/XJTKvH2kJQg0cuf4Gg8DRI/UI-Guide?node-id=176-14178&t=Kgl4nVum9LJWVH5c-1";
-
-const SYSTEM_PROMPT = `당신은 iM뱅크 UX Writing 가이드 전문가 봇입니다.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[핵심 행동 원칙]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- 질문이 단어 하나여도, 오타가 있어도, 짧아도 맥락 파악 후 즉시 답변
-- 추가 설명 요구 없이 가능한 범위에서 바로 핵심을 답한다
-- 추천 문구 먼저, 원칙은 간결하게
-- 서론/마무리 멘트 생략, 바로 핵심부터
-- 문구 생성 시 반드시 아래 [톤·어투 기준]과 [용어 대치 사전]을 적용한다
-- 가이드에 없는 항목(배너, CTA, 완료, 토스트, 타이틀 일반 등)은 답변 말미에 "※ 이 항목은 공식 가이드에 포함되지 않은 내용입니다. 가이드의 톤·어투 기준을 적용해 제안했습니다."라고 반드시 명시한다
-- 용어 교정 요청 시: 대치어를 먼저 제시하고 이유를 한 줄로 설명한다
-- 문구 안에 [용어 대치 사전]의 기존어가 포함된 경우 자동으로 대치어로 교체한다
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[톤·어투 기준] ← 모든 문구 생성에 적용
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- 친절하고 명확한 구어체 (예: "~해주세요", "~됐어요", "~해보세요")
-- 원인 나열보다 해결 행동 중심
-- 기술 용어·시스템 코드 사용 금지
-- 부정 표현 지양, 긍정·행동 유도형 표현 사용
-- 피동형 지양 → 능동형 사용 (예: "처리되었습니다" → "처리했어요")
-- 한자어·어려운 어휘 지양 → 쉬운 한국어로 (예: "불이익" → "손해", "요건" → "조건")
-- 문장 종결: "~했습니다" 격식체보다 "~했어요" "~해주세요" 권장
-- 불필요한 경어 중복 사용 금지
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[용어 대치 사전] ← 문구 생성·교정 시 자동 적용
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-브랜드/기관명:
-- 당행, 본 은행, 당 은행, 대구은행, DGB, 아이엠뱅크 → iM뱅크
-- 고객센터, 콜센터, 당행 고객센터 → iM뱅크 고객센터(1566-5050/1588-5050)
-- 지점 → 영업점
-- 모바일앱뱅킹, 스마트뱅킹, 스마트폰뱅킹 → 모바일뱅킹
-- iM뱅크 모바일 앱, iM뱅킹 앱 → iM뱅크 앱
-
-금융 용어:
-- 수신 → 예적금
-- 여신, 대부 → 대출
-- 통장대출 → 마이너스통장
-- 차주 → 대출고객
-- 요구불 → 입출금 계좌
-- 평잔 → 평균잔액
-- 적요 → 거래내용
-- 시재 → 보유 현금
-- 원장잔액 → 계좌잔액
-- 잔고 → 수신:총잔액 / 투자:평가금액 / 대출:대출잔액
-- 후취보수/선취보수 → 후취수수료/선취수수료
-- 리볼빙, 회전결제 → 일부결제이월약정(리볼빙)
-- 변제 → 상환
-- 불입 → 납입/납부
-- 수납 → 납부
-- 이율, 이자율 → 이자율
-- 거치기간 → 대출:이자만 납부하는 기간 / 예금:납입전 유예기간
-- 난수일련번호 → 쿠폰번호
-- 표면잔액 → 대출:대출잔액 / 투자:투자원금
-
-일반 용어:
-- 클릭하다, 누르다, 터치하다 → 선택하다
-- 상세보기, 자세히보기 → 자세히 보기
-- 푸시알림, PUSH, push → 앱알림
-- 바이오정보, 생체정보 → 생체정보(FACE ID, 지문)
-- 핸드폰, 휴대전화 → 휴대폰
-- 스마트단말, 단말기, 기기 → 스마트폰 또는 휴대폰
-- 어플, 어플리케이션, APP → 앱
-- 문자, 메시지, SMS, LMS → 문자메시지
-- 보안카드, 씨크리트카드 → 보안카드
-- 간편비밀번호, 인증 비밀번호, 퀵인증 비밀번호 → 간편비밀번호
-- 받을 계좌 → 받는 계좌
-- 가입하다, 개설하다, 만들다 → 상품:가입하기 / 통장:개설하기
-- 인증수단, 인증방식 → 인증방법
-- ARS 인증, 전화 인증 → 전화 인증
-- 통장, 계좌 → 계좌 (상품명 맥락에 따라 수정)
-- 승인대기 → 수락대기
-- 배송지, 수령지 → 받는 곳
-- 서류교부방법 → 서류 받는방법
-- 수령하다 → 받다
-- 소지하다 → 가지다/있다
-- 성명, 성함 → 이름
-- 불이익 → 손해
-- 진위여부, 진위 → 사실여부
-- 상이 → 다름
-- 불일치 → 일치하지 않음
-- 명칭 → 이름
-- 열람 → 조회/확인
-- 존재/존재하다 → 있음/있습니다
-- 세부 → 자세한
-- 상기 → 위
-- 서면 → 종이 문서
-- 세액 → 세금
-- 통지/통보하다 → 알리다/안내하다
-- 잔여 → 남은
-- 재촬영, 재OO → 다시 촬영, 다시 OO
-- 유선 → 전화
-- 통상 → 일반적으로
-- 요건 → 조건
-- 산출 → 계산
-- 선행 → 우선
-- 전일 → 하루 전
-- 익영업일 → 다음 영업일
-- 전영업일 → 하루 전(영업일 기준)
-- 20영업일 → 20일(영업일 기준)
-- 자택 → 집
-- 근무처, 회사 → 직장
-- 타행 → 다른 은행
-- 신규 (단독 사용 금지) → 문장 맥락에 따라 수정
-- 미OO → OO하지 않은/되지 않은
-
-표현 교정:
-- 알아두세요, 알아두실 사항, 안내사항, 확인사항, 유의사항 → 앱:유의사항 / 메시지:확인해주세요
-- 동의/비동의, 동의함/동의하지 않음 → 동의/동의 안함
-- 예/아니에요, 네/아니요 → 예/아니요
-- CASHBACK → 캐시백
-- ON/OFF → 켜기/끄기
-- ex, Ex → 예.
-- FAX → 팩스
-- ID/PW → 아이디/비밀번호
-- 되었습니다(피동) → 했습니다(능동)
-- 토/일요일·공휴일, 주말 및 휴일 → 토/일/공휴일
-- 서비스가 제한됩니다 → 서비스를 이용할 수 없습니다
-- 취급이 불가한 상품입니다 → 신청할 수 없는 상품입니다
-- 신청해 주세요 → 신청해주세요 (띄어쓰기 없이)
-- 상담직원, 권유직원 → 추천직원
-- 사업자 번호 → 사업자등록번호
-- 주민번호 → 주민등록번호
-- 외국인신분증 → 외국인등록증
-
-영어 단독 유지 (한글 변환 금지):
-- ARS, ATM, OS, CVC, Tip, OTP, FACE ID
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[공식 가이드 데이터] ← JSON 파일 기반
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-## 컴포넌트
-
-### 바텀시트
-- 용도: 현재 화면 흐름 유지하면서 부가 작업
-- 조건: 단일 목적, 빠른 입력/선택/확인, 현재 화면 연계 흐름
-- 타입: 텍스트형, 입력형, 약관형, 날짜선택형, 선택형, 필터형, 이미지형, 공유형, 암호형, 조합형, 마케팅형
-- 텍스트형: 타이틀 최대 16자, 서브타이틀 2줄까지, 버튼 확인/취소
-- 입력형: OTP/비밀번호/계좌 입력, 헬퍼텍스트 포함, 닫기 비활성화 가능
-- 날짜선택형: 휠픽커(요일 불필요, 기본권장) / 캘린더픽커(요일 필요)
-- 약관형: 불릿/단락 구분, 동의/동의 안함 버튼, 필수면 닫기 미제공
-
-### 모달팝업
-- 용도: 흐름 중단 후 즉각 반응 유도
-- 조건: 중요 경고/안내, 확인/취소 필요, 단일 작업
-- 타입: 기본형, 타이틀형, 이미지형, 공지형
-
-### 바텀시트 vs 모달
-- 흐름 유지 → 바텀시트
-- 흐름 중단 필요 → 모달
-
-## UX Writing 패턴 (공식 가이드)
-
-### 에러 메시지
-- 어투: 친절, 해결 방법 중심, 최대 20자
-- 금지: 기술 용어, 시스템 코드
-- 추천: "다시 시도해주세요" / "비밀번호를 확인해주세요"
-- 지양: "에러가 발생했습니다" / "시스템 오류"
-
-### Empty State (빈 화면)
-- 어투: 긍정적, 유도적, 2문장 이내
-- 추천: "아직 내역이 없어요" / "지금 바로 시작해보세요"
-- 지양: "데이터가 없습니다" / "결과 없음"
-
-### 로딩 상태
-- 어투: 부드럽고 안정감, 1문장 이내
-- 추천: "잠시만 기다려주세요" / "불러오는 중이에요"
-- 지양: "로딩 중" / "데이터 처리 중"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[가이드 외 항목] ← 톤·어투·용어 기준 적용해 제안, 반드시 명시
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-### 타이틀 (바텀시트 기준 준용)
-- 최대 16자, 문장형, 핵심 정보 앞 배치
-- 16자 초과 시 서브타이틀로 분리
-
-### 배너 문구
-- 핵심 혜택/수치 첫 줄, CTA와 짝 맞춤, 긍정 어투
-
-### 가입/추천 문구
-- 혜택 구체적으로, 즉각성 표현("지금/바로") 활용, 제안형, 2문장 이내
-
-### 버튼(CTA)
-- 동사형 6자 이내: "확인하기" "신청하기" "시작하기"
-- 금지: "OK" "제출" "클릭"
-
-### 완료 메시지
-- 추천: "완료됐어요!" / "이체가 완료됐어요"
-- 지양: "처리 완료" / "정상 처리되었습니다"
-
-### 토스트 메시지
-- 1문장, 행동 결과 중심
-- 추천: "복사됐어요" / "저장됐어요"
-
-## 피그마 가이드 문서
-${FIGMA_URL}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[답변 형식]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- 추천 문구 먼저 → 차선 문구 → 간단한 원칙
-- 문구 안에 대치 대상 용어가 있으면 자동 교정 후 제시
-- 타행 사례: 카카오뱅크, 토스, 신한SOL 또는 KB 중 3개
-- 피그마 링크 요청 시 URL 직접 제공
-- 가이드 외 항목은 답변 말미에 반드시 명시
-- 한국어, 친절하고 실무적인 어투`;
-
+let currentMode = 'chat';
 const conversationHistory = [];
-
+const selections = { situation: null, userstate: null, purpose: null, format: null };
+ 
+// ── 빠른 시작 서브메뉴 데이터 ──
+const SUB_MENUS = {
+  toast: {
+    label: '실패 Toast · 상황 선택',
+    items: [
+      { label: '서비스 가입', prompt: '서비스 가입 실패 Toast 문구 추천해줘' },
+      { label: '상품 가입', prompt: '상품 가입 실패 Toast 문구 추천해줘' },
+      { label: '로그인', prompt: '로그인 실패 Toast 문구 추천해줘' },
+      { label: '인증', prompt: '인증 실패 Toast 문구 추천해줘' },
+      { label: '정보 수정', prompt: '정보 수정 실패 Toast 문구 추천해줘' },
+      { label: '서비스 연결', prompt: '서비스 연결 실패 Toast 문구 추천해줘' },
+      { label: '송금', prompt: '송금 실패 Toast 문구 추천해줘' },
+      { label: '결제', prompt: '결제 실패 Toast 문구 추천해줘' },
+    ]
+  },
+  error: {
+    label: '오류 메시지 · 상황 선택',
+    items: [
+      { label: '비밀번호 오류', prompt: '비밀번호 오류 에러 메시지 추천해줘' },
+      { label: '인증 오류', prompt: '인증 오류 에러 메시지 추천해줘' },
+      { label: '네트워크 오류', prompt: '네트워크 오류 에러 메시지 추천해줘' },
+      { label: '한도 초과', prompt: '한도 초과 오류 메시지 추천해줘' },
+      { label: '잔액 부족', prompt: '잔액 부족 오류 메시지 추천해줘' },
+      { label: '세션 만료', prompt: '세션 만료 오류 메시지 추천해줘' },
+      { label: '입력값 오류', prompt: '입력값 오류 에러 메시지 추천해줘' },
+    ]
+  },
+  popup: {
+    label: '서비스 안내 팝업 · 상황 선택',
+    items: [
+      { label: '가입 완료', prompt: '가입 완료 서비스 안내 팝업 문구 추천해줘' },
+      { label: '이체 완료', prompt: '이체 완료 안내 팝업 문구 추천해줘' },
+      { label: '서비스 점검', prompt: '서비스 점검 안내 팝업 문구 추천해줘' },
+      { label: '약관 동의', prompt: '약관 동의 안내 팝업 문구 추천해줘' },
+      { label: '신규 기능 안내', prompt: '신규 기능 안내 팝업 문구 추천해줘' },
+      { label: '보안 안내', prompt: '보안 안내 팝업 문구 추천해줘' },
+      { label: '이벤트 안내', prompt: '이벤트 안내 팝업 문구 추천해줘' },
+    ]
+  },
+  term: {
+    label: '용어 교정 · 항목 선택',
+    items: [
+      { label: '당행 / 본 은행', prompt: '당행이라는 표현을 어떻게 바꿔야 해?' },
+      { label: '여신 / 수신', prompt: '여신, 수신 표현을 어떻게 바꿔야 해?' },
+      { label: '클릭 / 터치', prompt: '클릭, 터치 표현을 어떻게 바꿔야 해?' },
+      { label: '푸시알림', prompt: '푸시알림 표현을 어떻게 바꿔야 해?' },
+      { label: '타행', prompt: '타행 표현을 어떻게 바꿔야 해?' },
+      { label: '가입 / 개설', prompt: '가입하다, 개설하다 표현 차이 알려줘' },
+      { label: '동의 / 비동의', prompt: '동의/비동의 표현을 어떻게 바꿔야 해?' },
+    ]
+  }
+};
+ 
+function showSubMenu(key) {
+  const data = SUB_MENUS[key];
+  if (!data) return;
+  document.getElementById('quickMain').style.display = 'none';
+  document.getElementById('quickSubLabel').textContent = data.label;
+  const tagsEl = document.getElementById('quickSubTags');
+  tagsEl.innerHTML = data.items.map(item =>
+    `<div class="tag" onclick="sendQuick('${item.prompt.replace(/'/g,"\\'")}')"> ${item.label}</div>`
+  ).join('');
+  document.getElementById('quickSub').style.display = 'block';
+}
+ 
+function hideSubMenu() {
+  document.getElementById('quickSub').style.display = 'none';
+  document.getElementById('quickMain').style.display = 'flex';
+}
+ 
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const g = chip.dataset.group;
+    document.querySelectorAll(`.chip[data-group="${g}"]`).forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    selections[g] = chip.dataset.val;
+  });
+});
+ 
+function setMode(mode) {
+  currentMode = mode;
+  const btnBuilder = document.getElementById('btnBuilder');
+  const btnChat    = document.getElementById('btnChat');
+  const panel      = document.getElementById('builderPanel');
+  const divider    = document.getElementById('builderDivider');
+  const activeStyle   = 'flex:1;padding:8px 0;font-size:13px;font-weight:600;border:none;border-radius:9px;cursor:pointer;font-family:inherit;transition:all 0.2s;background:linear-gradient(135deg,#005BAC,#4A9EE8);color:white;box-shadow:0 0 14px rgba(74,158,232,0.4);';
+  const inactiveStyle = 'flex:1;padding:8px 0;font-size:13px;font-weight:500;border:none;border-radius:9px;cursor:pointer;font-family:inherit;transition:all 0.2s;background:transparent;color:rgba(255,255,255,0.35);';
+ 
+  if (mode === 'builder') {
+    btnBuilder.style.cssText = activeStyle;
+    btnChat.style.cssText    = inactiveStyle;
+    panel.classList.remove('hidden');
+    panel.classList.add('visible');
+    if (divider) divider.style.display = 'flex';
+    const qs = document.getElementById('quickStartSection');
+    if (qs) qs.style.display = 'none';
+    document.getElementById('userInput').placeholder = 'UX Writing Assistant 외 자유 질문도 가능해요...';
+  } else {
+    btnChat.style.cssText    = activeStyle;
+    btnBuilder.style.cssText = inactiveStyle;
+    panel.classList.remove('visible');
+    panel.classList.add('hidden');
+    if (divider) divider.style.display = 'none';
+    const qs = document.getElementById('quickStartSection');
+    if (qs) qs.style.display = 'block';
+    document.getElementById('userInput').placeholder = '자유롭게 질문하거나 문구 교정을 요청해보세요...';
+  }
+}
+ 
+const SYSTEM_PROMPT = `당신은 iM뱅크 UX Writing 가이드 전문가 봇입니다.
+ 
+━━━ [최우선 원칙] ━━━
+모든 응답은 아래 [UX Writing Guide JSON 룰]을 반드시 적용합니다.
+룰을 어기는 문구는 절대 추천하지 않습니다.
+가이드 외 항목은 답변 말미에 반드시 "※ 공식 가이드 외 항목"으로 명시합니다.
+ 
+━━━ [UX Writing Guide JSON 룰 — 강제 적용] ━━━
+ 
+## 톤·어투 기준
+- 구어체 친근 어투: ~해주세요, ~됐어요, ~해보세요
+- 해결 행동 중심 (원인 나열 지양)
+- 기술 용어·시스템 코드 금지
+- 부정 표현 → 긍정·행동 유도형 전환
+- 피동형 → 능동형 (처리되었습니다 → 처리했어요)
+- 한자어 → 쉬운 한국어
+ 
+## 컴포넌트별 문구 기준
+- Toast/Snack-bar: 최대 1문장, 행동 결과 중심
+- Tool tip: 핵심 정보 1줄 이내
+- Ground pop-up / System pop-up: 타이틀 최대 16자 문장형, 버튼 동사형 6자 이내
+- 에러 메시지: 최대 20자, 해결 행동 포함
+- Empty State: 2문장 이내, 행동 유도 포함
+- 로딩: 1문장, 안정감 있는 표현
+ 
+## 용어 대치 사전 (자동 교체)
+당행/본 은행/대구은행/DGB → iM뱅크
+고객센터/콜센터 → iM뱅크 고객센터(1566-5050/1588-5050)
+지점 → 영업점 / 어플 → 앱 / 모바일앱뱅킹 → 모바일뱅킹
+수신 → 예적금 / 여신/대부 → 대출 / 평잔 → 평균잔액
+적요 → 거래내용 / 원장잔액 → 계좌잔액 / 불입 → 납입
+클릭/누르다/터치 → 선택하다 / 푸시알림/PUSH → 앱알림
+핸드폰/휴대전화 → 휴대폰 / 동의/비동의 → 동의/동의 안함
+타행 → 다른 은행 / 전일 → 하루 전 / 잔여 → 남은
+성명/성함 → 이름 / 불이익 → 손해 / 불일치 → 일치하지 않음
+ON/OFF → 켜기/끄기 / CASHBACK → 캐시백
+영어 단독 유지: ARS, ATM, OS, CVC, OTP, FACE ID
+ 
+━━━ [UX Writing Assistant 응답 형식 — 반드시 JSON으로만 출력] ━━━
+UX Writing Assistant 입력이 들어오면 반드시 아래 JSON 형식으로만 출력하세요. 다른 텍스트 없이 JSON만 출력합니다.
+ 
+iM뱅크 JSON 톤 기준을 통합 반영해 단일 최적 추천 문구를 제시합니다:
+- 명확하고 친절한 어투 (에러/오류 상황)
+- 긍정적이고 유도적인 어투 (빈 화면/안내 상황)
+- 부드럽고 안정감을 주는 표현 (로딩/대기 상황)
+→ 상황에 맞는 톤을 자동 선택해 하나의 최적 문구로 도출
+ 
+{
+  "context": {
+    "type": "제공형태",
+    "title": "상황 · 핵심내용"
+  },
+  "recommend": {
+    "copies": ["문구줄1", "문구줄2(없으면 빈문자열)"],
+    "charCount": 숫자,
+    "toneApplied": "적용된 톤 (예: 명확하고 친절한 어투)",
+    "insight": "이 문구를 이렇게 쓴 이유 한 문장",
+    "rules": [
+      {"key": "룰명", "desc": "설명"},
+      {"key": "룰명", "desc": "설명"}
+    ]
+  },
+  "alt": {
+    "copies": ["차선 문구"],
+    "charCount": 숫자,
+    "problem": "차선의 문제점"
+  },
+  "banks": [
+    {"name": "토스", "cls": "b-toss", "content": "사례 설명"},
+    {"name": "카카오뱅크", "cls": "b-kakao", "content": "사례 설명"},
+    {"name": "신한SOL", "cls": "b-shinhan", "content": "사례 설명"}
+  ],
+  "isGuideExt": false,
+  "guideExtNote": ""
+}
+ 
+━━━ [자유 질문 응답] ━━━
+- Prompt Builder 외 질문은 자연어로 답변 (JSON 불필요)
+- 단어 하나여도 맥락 파악 후 즉시 답변
+- 용어 교정: 대치어 먼저, 이유 한 줄
+- 피그마 링크 요청: ${FIGMA_URL} 직접 제공
+- 항상 추천/차선 문구 세트 제공`;
+ 
 function scrollToBottom() {
   setTimeout(() => {
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     document.getElementById('chatArea').scrollTop = document.getElementById('chatArea').scrollHeight;
   }, 60);
 }
-
-function addMessage(content, isUser) {
+ 
+function addUserMessage(text) {
   const area = document.getElementById('chatArea');
   const row = document.createElement('div');
-  row.className = `message-row${isUser ? ' user' : ''}`;
-
-  const avatar = document.createElement('div');
-  avatar.className = `avatar ${isUser ? 'user-av' : 'bot'}`;
-  avatar.textContent = isUser ? '나' : 'iM';
-
-  const bubble = document.createElement('div');
-  bubble.className = `bubble ${isUser ? 'user' : 'bot'}`;
-  if (isUser) { bubble.textContent = content; } else { bubble.innerHTML = content; }
-
-  row.appendChild(avatar);
-  row.appendChild(bubble);
-  area.appendChild(row);
-  scrollToBottom();
-  return bubble;
-}
-
-function addTyping() {
-  const area = document.getElementById('chatArea');
-  const row = document.createElement('div');
-  row.className = 'message-row'; row.id = 'typingRow';
-  const avatar = document.createElement('div');
-  avatar.className = 'avatar bot'; avatar.textContent = 'iM';
-  const ind = document.createElement('div');
-  ind.className = 'typing-indicator';
-  ind.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-  row.appendChild(avatar); row.appendChild(ind);
+  row.className = 'message-row user';
+  const av = document.createElement('div'); av.className = 'avatar user-av'; av.textContent = '나';
+  const bub = document.createElement('div'); bub.className = 'bubble user'; bub.textContent = text;
+  row.appendChild(av); row.appendChild(bub);
   area.appendChild(row); scrollToBottom();
 }
-
-function removeTyping() { const t = document.getElementById('typingRow'); if (t) t.remove(); }
-
-function parseMarkdown(text) {
-  return text
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
-    .replace(/^## (.+)$/gm,'<h3>$1</h3>')
-    .replace(/^- (.+)$/gm,'<li>$1</li>')
-    .replace(/(<li>[^<]*<\/li>\n?)+/g, m=>`<ul>${m}</ul>`)
-    .replace(/\n\n+/g,'<br><br>')
-    .replace(/\n/g,'<br>')
-    .replace(/(https?:\/\/[^\s&<>"]+)/g,'<a class="figma-link" href="$1" target="_blank">📐 피그마 가이드 바로 가기 →</a>');
+ 
+function addTyping() {
+  const area = document.getElementById('chatArea');
+  const row = document.createElement('div'); row.className = 'message-row'; row.id = 'typingRow';
+  const av = document.createElement('div'); av.className = 'avatar bot'; av.textContent = 'iM';
+  const ind = document.createElement('div'); ind.className = 'typing-indicator';
+  ind.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  row.appendChild(av); row.appendChild(ind); area.appendChild(row); scrollToBottom();
 }
-
-async function handleSend() {
-  const input = document.getElementById('userInput');
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = ''; input.style.height = 'auto';
-  document.getElementById('sendBtn').disabled = true;
-
-  addMessage(text, true);
-  conversationHistory.push({ role: 'user', content: text });
+function removeTyping() { const t = document.getElementById('typingRow'); if (t) t.remove(); }
+ 
+// 결과 카드 렌더링 (단일 추천)
+function renderToneCards(data) {
+  const area = document.getElementById('chatArea');
+  const row = document.createElement('div');
+  row.className = 'message-row';
+  const av = document.createElement('div'); av.className = 'avatar bot'; av.textContent = 'iM';
+  const bub = document.createElement('div'); bub.className = 'bubble bot';
+ 
+  const r = data.recommend;
+  const a = data.alt;
+  const copyText = r.copies.filter(c => c).join('\n');
+  const altCopyText = a.copies.filter(c => c).join('\n');
+ 
+  // 컨텍스트 레이블
+  bub.innerHTML = `
+    <div class="context-label">
+      <span class="ctx-type">${data.context.type}</span>
+      <span class="ctx-sep">·</span>
+      <span class="ctx-title">${data.context.title}</span>
+      <span class="ctx-sep">—</span>
+      <span style="color:#4A5068;">UX Writing Guide 적용</span>
+    </div>`;
+ 
+  // ── 추천 문구 카드 ──
+  const recCard = document.createElement('div');
+  recCard.className = 'tone-card';
+  recCard.innerHTML = `
+    <div class="tone-card-header">
+      <div class="card-num" style="background:#005BAC;color:white;">✓</div>
+      <div class="tone-badge trust">추천 문구</div>
+    </div>
+    <div class="card-body">
+      <div class="card-copy">${r.copies.map(c => c ? `<span class="copy-line">${c}</span>` : '').join('')}</div>
+      <div class="card-meta">
+        <span class="meta-badge trust">${r.toneApplied}</span>
+        <span class="char-count">${r.charCount}자</span>
+      </div>
+      <div class="card-insight"><span class="insight-icon">💡</span><span>${r.insight}</span></div>
+      <button class="copy-btn" onclick="copyText('${copyText.replace(/'/g,"\\'")}', this)">📋 복사</button>
+    </div>
+    ${r.rules && r.rules.length ? `
+    <hr class="card-divider">
+    <div class="rule-section">
+      <div class="rule-title">적용된 UX Writing 룰</div>
+      <div class="rule-items">
+        ${r.rules.map(rule => `<div class="rule-item"><span class="rule-key">${rule.key}:</span><span>${rule.desc}</span></div>`).join('')}
+      </div>
+    </div>` : ''}
+  `;
+  bub.appendChild(recCard);
+ 
+  // ── 차선 문구 카드 ──
+  if (a && a.copies && a.copies.length) {
+    const altCard = document.createElement('div');
+    altCard.className = 'tone-card';
+    altCard.style.marginTop = '8px';
+    altCard.innerHTML = `
+      <div class="tone-card-header">
+        <div class="card-num">↓</div>
+        <div class="tone-badge" style="background:rgba(122,128,150,0.15);color:#7A8096;border:1px solid rgba(122,128,150,0.25);">차선 문구</div>
+      </div>
+      <div class="card-body">
+        <div class="card-copy" style="font-size:15px;color:#9BA3B8;">${a.copies.map(c => c ? `<span class="copy-line">${c}</span>` : '').join('')}</div>
+        ${a.charCount ? `<div class="card-meta"><span class="char-count">${a.charCount}자</span></div>` : ''}
+        ${a.problem ? `<div class="card-insight" style="background:#1A1520;"><span class="insight-icon" style="color:#E57373;">⚠</span><span style="color:#9A7070;">${a.problem}</span></div>` : ''}
+        <button class="copy-btn" onclick="copyText('${altCopyText.replace(/'/g,"\\'")}', this)">📋 복사</button>
+      </div>
+    `;
+    bub.appendChild(altCard);
+  }
+ 
+  // ── 타행 케이스 ──
+  if (data.banks && data.banks.length) {
+    const bankCard = document.createElement('div');
+    bankCard.className = 'tone-card';
+    bankCard.style.marginTop = '8px';
+    bankCard.innerHTML = `
+      <div class="bank-section" style="border-radius:14px;">
+        <div class="bank-title">동일 내용 타행 케이스 확인</div>
+        <div class="bank-rows">
+          ${data.banks.map(b => `
+          <div class="bank-row">
+            <span class="bank-name ${b.cls}">${b.name}</span>
+            <span class="bank-content">${b.content}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+    `;
+    bub.appendChild(bankCard);
+  }
+ 
+  // ── 가이드 외 알림 ──
+  if (data.isGuideExt && data.guideExtNote) {
+    const ext = document.createElement('div');
+    ext.className = 'notice-ext';
+    ext.style.marginTop = '8px';
+    ext.textContent = `※ ${data.guideExtNote}`;
+    bub.appendChild(ext);
+  }
+ 
+  row.appendChild(av); row.appendChild(bub);
+  area.appendChild(row); scrollToBottom();
+}
+ 
+// 일반 텍스트 응답 렌더링
+function renderTextResponse(text) {
+  const area = document.getElementById('chatArea');
+  const row = document.createElement('div'); row.className = 'message-row';
+  const av = document.createElement('div'); av.className = 'avatar bot'; av.textContent = 'iM';
+  const bub = document.createElement('div'); bub.className = 'bubble bot';
+ 
+  // 마크다운 → HTML 변환
+  const html = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    // 코드블록 제거 (```언어 ... ```)
+    .replace(/```[\w]*\n?([\s\S]*?)```/g, '')
+    // 인라인 코드 제거
+    .replace(/`([^`]+)`/g, '$1')
+    // 굵게
+    .replace(/\*\*(.+?)\*\*/g,'<strong style="color:rgba(255,255,255,0.9);">$1</strong>')
+    // ### 헤더 → 섹션 타이틀
+    .replace(/^###\s(.+)$/gm,'<div style="font-size:11px;font-weight:700;color:var(--im-blue);text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 6px;">$1</div>')
+    // ## 헤더
+    .replace(/^##\s(.+)$/gm,'<div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);margin:12px 0 5px;">$1</div>')
+    // 리스트
+    .replace(/^[-•]\s(.+)$/gm,'<div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--im-blue);flex-shrink:0;">·</span><span>$1</span></div>')
+    // 번호 리스트
+    .replace(/^\d+\.\s(.+)$/gm,'<div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--im-blue);flex-shrink:0;font-weight:600;">·</span><span>$1</span></div>')
+    // 인용구 (※ 표기)
+    .replace(/※\s(.+)/g,'<div style="background:rgba(255,184,77,0.08);border:1px solid rgba(255,184,77,0.2);border-radius:8px;padding:7px 11px;font-size:11px;color:rgba(255,184,77,0.9);margin-top:8px;">※ $1</div>')
+    // 빈 줄 → 간격
+    .replace(/\n\n/g,'<div style="height:8px;"></div>')
+    .replace(/\n/g,'<br>')
+    // URL → 링크
+    .replace(/(https?:\/\/[^\s&lt;&gt;"]+)/g,'<a style="color:var(--im-blue);font-size:13px;font-weight:500;" href="$1" target="_blank">📐 피그마 가이드 바로 가기 →</a>');
+ 
+  bub.innerHTML = `<div style="padding:14px 16px;background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:14px;border-top-left-radius:4px;font-size:13px;line-height:1.75;color:rgba(255,255,255,0.78);">${html}</div>`;
+  row.appendChild(av); row.appendChild(bub);
+  area.appendChild(row); scrollToBottom();
+}
+ 
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ 복사됨';
+    setTimeout(() => { btn.innerHTML = '📋 복사'; }, 1500);
+  });
+}
+ 
+async function callAPI(userMessage, isBuilder) {
+  conversationHistory.push({ role: 'user', content: userMessage });
   addTyping();
-
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-allow-browser': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        max_tokens: 2000,
         system: SYSTEM_PROMPT,
         messages: conversationHistory
       })
     });
-
     const data = await res.json();
-    const reply = data.content?.map(c => c.text || '').join('') || '답변을 가져오지 못했어요. 다시 시도해주세요.';
+    if (!res.ok) {
+      throw new Error(data.error?.message || `API 오류 (${res.status})`);
+    }
+    const reply = data.content?.map(c => c.text || '').join('') || '답변을 가져오지 못했어요.';
     conversationHistory.push({ role: 'assistant', content: reply });
-
     removeTyping();
-    addMessage(parseMarkdown(reply), false);
-
-  } catch (e) {
+ 
+    if (isBuilder) {
+      // JSON 파싱 시도
+      try {
+        const clean = reply.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        renderToneCards(parsed);
+      } catch(e) {
+        renderTextResponse(reply);
+      }
+    } else {
+      renderTextResponse(reply);
+    }
+  } catch(e) {
     removeTyping();
-    addMessage('네트워크 오류가 발생했어요. 잠시 후 다시 시도해주세요.', false);
+    renderTextResponse(`오류가 발생했어요: ${e.message}`);
     conversationHistory.pop();
   }
-
+  const bs = document.getElementById('builderSubmit');
+  if (bs) bs.disabled = false;
   document.getElementById('sendBtn').disabled = false;
   document.getElementById('userInput').focus();
   scrollToBottom();
 }
-
-function sendQuick(text) { document.getElementById('userInput').value = text; handleSend(); }
-
+ 
+function submitBuilder() {
+  const { situation, userstate, purpose, format } = selections;
+  const core = document.getElementById('coreContent').value.trim();
+  const charCount = document.getElementById('c-charcount').value.trim();
+  const keyword = document.getElementById('c-keyword').value.trim();
+  const required = document.getElementById('c-required').value.trim();
+ 
+  const missing = [];
+  if (!situation) missing.push('[1] 상황');
+  if (!userstate) missing.push('[2] 사용자 상태');
+  if (!purpose) missing.push('[3] 전달 목적');
+  if (!format) missing.push('[4] 제공 형태');
+  if (!core) missing.push('[6] 핵심 내용');
+  if (missing.length) { alert(`다음 항목을 입력해주세요:\n${missing.join(', ')}`); return; }
+ 
+  let prompt = `[Prompt Builder]\n[1]상황:${situation} [2]사용자상태:${userstate} [3]목적:${purpose} [4]형태:${format}`;
+  if (charCount||keyword||required) prompt += ` [5]제약:${[charCount,keyword,required].filter(Boolean).join('/')}`;
+  prompt += ` [6]핵심내용:${core}`;
+  prompt += `\n\n위 조건으로 iM뱅크 UX Writing Guide 룰을 적용해 톤별 강화 문구를 JSON 형식으로 생성해주세요.`;
+ 
+  const summary = `${format} · ${situation} · ${userstate} · "${core}"`;
+  addUserMessage(summary);
+  document.getElementById('builderSubmit').disabled = true;
+  callAPI(prompt, true);
+}
+ 
+function handleSend() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim(); if (!text) return;
+  input.value = ''; input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+  addUserMessage(text);
+  callAPI(text, false);
+}
+ 
+function sendQuick(text) {
+  hideSubMenu();
+  // value 먼저 세팅
+  const input = document.getElementById('userInput');
+  input.value = text;
+  input.placeholder = '자유롭게 질문하거나 문구 교정을 요청해보세요...';
+  // 모드 전환
+  setMode('chat');
+  // 직접 API 호출 (handleSend 대신 — value가 setMode로 지워질 수 있어서)
+  const trimmed = text.trim();
+  if (!trimmed) return;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+  addUserMessage(trimmed);
+  callAPI(trimmed, false);
+}
+ 
 const inp = document.getElementById('userInput');
-inp.addEventListener('keydown', e => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } });
-inp.addEventListener('input', () => { inp.style.height='auto'; inp.style.height=Math.min(inp.scrollHeight,120)+'px'; });
+inp.addEventListener('keydown', e => { if (e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();} });
+inp.addEventListener('input', () => { inp.style.height='auto'; inp.style.height=Math.min(inp.scrollHeight,100)+'px'; });
 </script>
 </body>
 </html>
